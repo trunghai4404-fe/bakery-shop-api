@@ -7,6 +7,9 @@
   <Folder Name="/src/Modules/" />
   <Folder Name="/src/Modules/Catalog/">
     <Project Path="src/Modules/Catalog/Catalog.Application/Catalog.Application.csproj" />
+    <Project Path="src/Modules/Catalog/Catalog.Contracts/Catalog.Contracts.csproj" />
+    <Project Path="src/Modules/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
+    <Project Path="src/Modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Contents/">
     <Project Path="src/Modules/Contents/Application/Application.csproj" />
@@ -15,9 +18,9 @@
     <Project Path="src/Modules/Contents/Infrastructure/Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Identity/">
-    <Project Path="src/Modules/Identity/Application/Application.csproj" />
-    <Project Path="src/Modules/Identity/Contracts/Contracts.csproj" />
-    <Project Path="src/Modules/Identity/Domain/Domain.csproj" />
-    <Project Path="src/Modules/Identity/Infrastructure/Infrastructure.csproj" />
+    <Project Path="src/Modules/Identity/Identity.Application/Identity.Application.csproj" />
+    <Project Path="src/Modules/Identity/Identity.Contracts/Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
 </Solution>

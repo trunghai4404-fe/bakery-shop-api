@@ -1,4 +1,5 @@
-﻿using SharedKernel.Domain.Errors;
+﻿using SharedKernel.Commons;
+using SharedKernel.Domain.Errors;
 
 namespace Identity.Domain.Errors;
 
