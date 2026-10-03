@@ -21,4 +21,26 @@ public static class ErrorCode
     public const string ExpiredToken = "EXPIRED_TOKEN";
     public const string InvalidToken = "INVALID_TOKEN";
     public const string InvalidCredentials = "INVALID_CREDENTIALS";
+    
+    //Identity
+    public const string UserNotFound = "USER_NOT_FOUND";
+    public const string EmailAlreadyExists = "EMAIL_ALREADY_EXISTS";
+    public const string InvalidRefreshToken = "INVALID_REFRESH_TOKEN";
+    public const string AccountInactive = "ACCOUNT_INACTIVE";
+    
+    //Role
+    public const string RoleAlreadyExists = "ROLE_ALREADY_EXISTS";
+    public const string RoleNotFound = "ROLE_NOT_FOUND";
+    public const string InvalidIdentifier ="Id or Code is required.";
+    
+    //Catalog
+    public const string VariantNotFound = "VARIANT_NOT_FOUND";
+    public const string ProductNotFound = "PRODUCT_NOT_FOUND";
+    public const string ProductVariantNotFound = "PRODUCT_VARIANT_NOT_FOUND";
+    public const string CategoryNotFound = "CATEGORY_NOT_FOUND";
+    public const string CategorySlugAlreadyExists = "CATEGORY_SLUG_ALREADY_EXISTS";
+    public const string ParentCategoryNotFound = "PARENT_CATEGORY_NOT_FOUND";
+    public const string CircularCategoryParent = "CIRCULAR_CATEGORY_PARENT";
+    public const string CategoryHasProducts = "CATEGORY_HAS_PRODUCTS";
+    public const string CategoryHasChildren = "CATEGORY_HAS_CHILDREN";
 }
