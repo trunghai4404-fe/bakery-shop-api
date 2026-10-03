@@ -1,4 +1,6 @@
 using Api.Extensions;
+using Catalog.Application;
+using Catalog.Infrastructure;
 using Contents.Application;
 using Identity.Application;
 using Identity.Infrastructure;
@@ -12,9 +14,10 @@ builder.Services.AddCustomSwagger();
 builder.Services.AddSharedInfrastructure();
 
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
+builder.Services.AddCatalogInfrastructure(builder.Configuration);
 builder.Services.AddIdentityApplication();
 builder.Services.AddContentsApplication(); 
-
+builder.Services.AddCatalogApplication();
 
 var app = builder.Build();
 await Identity.Infrastructure.Persistence.IdentityDataSeeder.SeedAsync(app.Services);
@@ -32,4 +35,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

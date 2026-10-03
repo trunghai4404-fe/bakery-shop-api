@@ -1,9 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <AssemblyName>Catalog.Application</AssemblyName>
+        <RootNamespace>Catalog.Application</RootNamespace>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\Catalog.Contracts\Catalog.Contracts.csproj" />
+      <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\Categories\Queries\" />
+      <Folder Include="Features\Product\Commands\" />
+      <Folder Include="Features\Product\Queries\" />
+    </ItemGroup>
 
 </Project>
