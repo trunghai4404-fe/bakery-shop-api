@@ -37,6 +37,8 @@ public static class ErrorCode
     public const string VariantNotFound = "VARIANT_NOT_FOUND";
     public const string ProductNotFound = "PRODUCT_NOT_FOUND";
     public const string ProductVariantNotFound = "PRODUCT_VARIANT_NOT_FOUND";
+    public const string ProductSlugAlreadyExists = "PRODUCT_SLUG_ALREADY_EXISTS";
+    public const string ProductSkuAlreadyExists = "PRODUCT_SKU_ALREADY_EXISTS";
     public const string CategoryNotFound = "CATEGORY_NOT_FOUND";
     public const string CategorySlugAlreadyExists = "CATEGORY_SLUG_ALREADY_EXISTS";
     public const string ParentCategoryNotFound = "PARENT_CATEGORY_NOT_FOUND";

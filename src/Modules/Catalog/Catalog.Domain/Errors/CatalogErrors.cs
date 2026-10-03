@@ -44,4 +44,14 @@ public static class CatalogErrors
         code: ErrorCode.ProductVariantNotFound,
         description: ErrorMessage.ProductVariantNotFound
     );
+
+    public static readonly Error ProductSlugAlreadyExists = Error.Conflict(
+        code: ErrorCode.ProductSlugAlreadyExists,
+        description: ErrorMessage.ProductSlugAlreadyExists
+    );
+
+    public static readonly Error ProductSkuAlreadyExists = Error.Conflict(
+        code: ErrorCode.ProductSkuAlreadyExists,
+        description: ErrorMessage.ProductSkuAlreadyExists
+    );
 }
