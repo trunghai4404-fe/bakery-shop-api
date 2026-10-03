@@ -15,11 +15,12 @@ public class Product : AuditableEntity<long>, IAuditableEntity
     public bool IsActive { get; private set; }
     // public long PromotionId {get; private set;}
     
-    public ICollection<ProductCategory>  ProductCategories { get; private set; } = new List<ProductCategory>();
-    public ICollection<ProductVariant>   ProductVariants { get; private set; } = new List<ProductVariant>();
+    public ICollection<ProductCategory> ProductCategories { get; private set; } = new List<ProductCategory>();
+    public ICollection<ProductVariant> ProductVariants { get; private set; } = new List<ProductVariant>();
     public ICollection<ProductImage> ProductImages { get; private set; } = new List<ProductImage>();
     
     public record ImageData(long Id, string DesktopUrl, string MobileUrl, int SortOrder, bool IsPrimary);
+    public record VariantData(long Id, string Name, string Sku, decimal Price, int StockQuantity, bool IsActive = true, int SortOrder = 0);
 
     private Product()
     { }
@@ -55,35 +56,44 @@ public class Product : AuditableEntity<long>, IAuditableEntity
             return Result.Failure<Product>(Error.Validation(ErrorCode.ValidationError, "Product sku is required"));
         }
         
-        var product = new Product(name, slug, sku,description, isActive);
+        var product = new Product(name, slug, sku, description, isActive);
         return Result.Success(product);
     }
 
-    public void Update(string? name, string? slug, string? sku, string? description, bool? isActive)
+    public Result Update(string name, string slug, string sku, string? description, bool isActive)
     {
-        if (!string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            Name = name;
+            return Result.Failure(Error.Validation(ErrorCode.ValidationError, "Product name is required"));
         }
 
-        if (!string.IsNullOrWhiteSpace(slug))
+        if (string.IsNullOrWhiteSpace(slug))
         {
-            Slug = slug;
+            return Result.Failure(Error.Validation(ErrorCode.ValidationError, "Product slug is required"));
         }
 
-        if (!string.IsNullOrWhiteSpace(sku))
+        if (string.IsNullOrWhiteSpace(sku))
         {
-            Sku = sku;
+            return Result.Failure(Error.Validation(ErrorCode.ValidationError, "Product sku is required"));
         }
 
-        if (!string.IsNullOrWhiteSpace(description))
-        {
-            Description = description;
-        }
-        if (isActive.HasValue)
-        {
-            IsActive = isActive.Value;
-        }
+        Name = name;
+        Slug = slug;
+        Sku = sku;
+        Description = description;
+        IsActive = isActive;
+
+        return Result.Success();
+    }
+    
+    public void ToggleStatus()
+    {
+        IsActive = !IsActive;
+    }
+
+    public void SetActive(bool isActive)
+    {
+        IsActive = isActive;
     }
     
     public void AddVariant(string name, string sku, decimal price, int stockQuantity)
@@ -103,7 +113,35 @@ public class Product : AuditableEntity<long>, IAuditableEntity
         return Result.Success();
     }
 
-    public void AddImage(string desktopUrl, string mobileUrl, int sortOrder,  bool isPrimary)
+    public void SyncVariants(IReadOnlyCollection<VariantData> variantDatas)
+    {
+        var incomingIds = variantDatas.Where(x => x.Id > 0).Select(x => x.Id).ToList();
+
+        var variantsToRemove = ProductVariants.Where(v => !incomingIds.Contains(v.Id)).ToList();
+        foreach (var v in variantsToRemove)
+        {
+            ProductVariants.Remove(v);
+        }
+
+        foreach (var data in variantDatas)
+        {
+            if (data.Id == 0)
+            {
+                var newVariant = new ProductVariant(Id, data.Name, data.Sku, data.Price, data.StockQuantity);
+                ProductVariants.Add(newVariant);
+            }
+            else
+            {
+                var existingVariant = ProductVariants.FirstOrDefault(x => x.Id == data.Id);
+                if (existingVariant != null)
+                {
+                    existingVariant.Update(data.Name, data.Sku, data.Price, data.StockQuantity, data.IsActive);
+                }
+            }
+        }
+    }
+
+    public void AddImage(string desktopUrl, string mobileUrl, int sortOrder, bool isPrimary)
     {
         var image = new ProductImage(Id, desktopUrl, mobileUrl, sortOrder, isPrimary);
         ProductImages.Add(image);
@@ -137,12 +175,29 @@ public class Product : AuditableEntity<long>, IAuditableEntity
         }
     }
     
-    
     public void AddCategory(long categoryId)
     {
         if (ProductCategories.All(c => c.CategoryId != categoryId))
         {
             ProductCategories.Add(new ProductCategory(Id, categoryId));
+        }
+    }
+
+    public void SyncCategories(IReadOnlyCollection<long> categoryIds)
+    {
+        var distinctIds = categoryIds.Distinct().ToList();
+        var toRemove = ProductCategories.Where(pc => !distinctIds.Contains(pc.CategoryId)).ToList();
+        foreach (var item in toRemove)
+        {
+            ProductCategories.Remove(item);
+        }
+
+        foreach (var categoryId in distinctIds)
+        {
+            if (ProductCategories.All(pc => pc.CategoryId != categoryId))
+            {
+                ProductCategories.Add(new ProductCategory(Id, categoryId));
+            }
         }
     }
 }

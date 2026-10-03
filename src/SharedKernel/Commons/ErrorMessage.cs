@@ -31,6 +31,8 @@ public class ErrorMessage
     public const string CircularCategoryParent = "A category cannot be set as a child or descendant of itself.";
     public const string ProductNotFound = "Product not found.";
     public const string ProductVariantNotFound = "Product variant not found.";
+    public const string ProductSlugAlreadyExists = "Product slug already exists.";
+    public const string ProductSkuAlreadyExists = "Product SKU already exists.";
     public const string CategoryHasProducts = "Cannot delete category because it still contains products.";
     public const string CategoryHasChildren = "Cannot delete category because it still contains child categories.";
 }

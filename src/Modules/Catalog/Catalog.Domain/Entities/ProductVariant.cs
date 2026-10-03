@@ -15,18 +15,18 @@ public class ProductVariant : AuditableEntity<long>, IAuditableEntity
     public bool IsActive { get; private set; }
     public int SortOrder { get; private set; }
     
-    private  ProductVariant()
+    private ProductVariant()
     {
     }
 
     internal ProductVariant(long productId, string name, string sku, decimal price, int stockQuantity)
     {
-           ProductId = productId;
-           Name = name;
-           Sku = sku;
-           Price = price;
-           StockQuantity = stockQuantity;
-           IsActive = true;
+        ProductId = productId;
+        Name = name;
+        Sku = sku;
+        Price = price;
+        StockQuantity = stockQuantity;
+        IsActive = true;
     }
 
     internal void Update(string name, string sku, decimal price, int stockQuantity, bool isActive)
@@ -38,4 +38,13 @@ public class ProductVariant : AuditableEntity<long>, IAuditableEntity
         IsActive = isActive;
     }
 
+    public void ToggleStatus()
+    {
+        IsActive = !IsActive;
+    }
+
+    public void SetActive(bool isActive)
+    {
+        IsActive = isActive;
+    }
 }
