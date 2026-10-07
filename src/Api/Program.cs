@@ -2,6 +2,7 @@ using Api.Extensions;
 using Catalog.Application;
 using Catalog.Infrastructure;
 using Contents.Application;
+using Contents.Infrastructure;
 using Identity.Application;
 using Identity.Infrastructure;
 using Shared;
@@ -26,6 +27,7 @@ builder.Services.AddSharedInfrastructure();
 
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
+builder.Services.AddContentsInfrastructure(builder.Configuration);
 builder.Services.AddIdentityApplication();
 builder.Services.AddContentsApplication(); 
 builder.Services.AddCatalogApplication();

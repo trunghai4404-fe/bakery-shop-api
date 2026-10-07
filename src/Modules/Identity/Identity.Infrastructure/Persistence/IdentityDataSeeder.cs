@@ -40,14 +40,18 @@ public static class IdentityDataSeeder
                 new(PermissionEnum.Category.CategoryUpdate, "Chỉnh sửa danh mục", null),
                 new(PermissionEnum.Category.CategoryDelete, "Xóa danh mục", null),
                 
-                new (PermissionEnum.Role.RoleView, "Xem role", null),
-                new (PermissionEnum.Role.RoleCreate, "Thêm role", null),
-                new (PermissionEnum.Role.RoleUpdate, "Chỉnh sửa role", null),
-                new (PermissionEnum.Role.RoleDelete, "Xóa role", null),
+                new(PermissionEnum.Role.RoleView, "Xem role", null),
+                new(PermissionEnum.Role.RoleCreate, "Thêm role", null),
+                new(PermissionEnum.Role.RoleUpdate, "Chỉnh sửa role", null),
+                new(PermissionEnum.Role.RoleDelete, "Xóa role", null),
                 
-                new (PermissionEnum.Permission.PermissionView, "Xem quyền", null),
-                new (PermissionEnum.Permission.PermissionUpdate, "Chỉnh sửa quyền", null),
-                
+                new(PermissionEnum.Permission.PermissionView, "Xem quyền", null),
+                new(PermissionEnum.Permission.PermissionUpdate, "Chỉnh sửa quyền", null),
+
+                new(PermissionEnum.Banner.BannerView, "Xem banner", null),
+                new(PermissionEnum.Banner.BannerCreate, "Thêm banner", null),
+                new(PermissionEnum.Banner.BannerUpdate, "Chỉnh sửa banner", null),
+                new(PermissionEnum.Banner.BannerDelete, "Xóa banner", null),
             };
 
             foreach (var permission in defaultPermissions)
@@ -120,9 +124,7 @@ public static class IdentityDataSeeder
                     
                     logger.LogInformation("Seed user admin successfully");
                 }
-                
             }
-
         }
         catch (Exception e)
         {

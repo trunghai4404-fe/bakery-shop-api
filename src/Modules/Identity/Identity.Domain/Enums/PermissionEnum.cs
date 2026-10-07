@@ -36,4 +36,12 @@ public static class PermissionEnum
         public const string PermissionView = "Permission.View";
         public const string PermissionUpdate = "Permission.Update";
     }
+
+    public static class Banner
+    {
+        public const string BannerView = "Banner.View";
+        public const string BannerCreate = "Banner.Create";
+        public const string BannerUpdate = "Banner.Update";
+        public const string BannerDelete = "Banner.Delete";
+    }
 }
