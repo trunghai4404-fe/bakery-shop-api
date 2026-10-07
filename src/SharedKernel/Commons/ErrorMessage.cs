@@ -35,4 +35,7 @@ public class ErrorMessage
     public const string ProductSkuAlreadyExists = "Product SKU already exists.";
     public const string CategoryHasProducts = "Cannot delete category because it still contains products.";
     public const string CategoryHasChildren = "Cannot delete category because it still contains child categories.";
+
+    // Contents / Banner
+    public const string BannerNotFound = "Banner not found.";
 }

@@ -45,4 +45,7 @@ public static class ErrorCode
     public const string CircularCategoryParent = "CIRCULAR_CATEGORY_PARENT";
     public const string CategoryHasProducts = "CATEGORY_HAS_PRODUCTS";
     public const string CategoryHasChildren = "CATEGORY_HAS_CHILDREN";
+
+    // Contents / Banner
+    public const string BannerNotFound = "BANNER_NOT_FOUND";
 }
