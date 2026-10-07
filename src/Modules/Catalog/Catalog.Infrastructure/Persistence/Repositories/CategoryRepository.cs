@@ -12,6 +12,7 @@ public class CategoryRepository(CatalogDbContext context) : ICategoryRepository
         bool? isActive,
         long? parentId,
         bool? isRoot,
+        bool? isFeatured,
         string? sortBy,
         bool isDescending,
         int page,
@@ -40,7 +41,13 @@ public class CategoryRepository(CatalogDbContext context) : ICategoryRepository
             query = query.Where(c => c.IsActive == isActive.Value);
         }
 
-        // 3. Parent / Hierarchy filter
+        // 3. Featured filter
+        if (isFeatured.HasValue)
+        {
+            query = query.Where(c => c.IsFeatured == isFeatured.Value);
+        }
+
+        // 4. Parent / Hierarchy filter
         if (parentId.HasValue)
         {
             query = query.Where(c => c.ParentId == parentId.Value);
@@ -52,7 +59,7 @@ public class CategoryRepository(CatalogDbContext context) : ICategoryRepository
                 : query.Where(c => c.ParentId != null);
         }
 
-        // 4. Sorting
+        // 5. Sorting
         query = (sortBy?.ToLower(), isDescending) switch
         {
             ("name", true) => query.OrderByDescending(c => c.Name),
@@ -70,10 +77,10 @@ public class CategoryRepository(CatalogDbContext context) : ICategoryRepository
                 : query.OrderBy(c => c.SortOrder).ThenByDescending(c => c.CreatedAt)
         };
 
-        // 5. Total count
+        // 6. Total count
         var totalCount = await query.CountAsync(ct);
 
-        // 6. Pagination
+        // 7. Pagination
         page = page <= 0 ? 1 : page;
         pageSize = pageSize <= 0 ? 10 : pageSize;
 
@@ -85,7 +92,7 @@ public class CategoryRepository(CatalogDbContext context) : ICategoryRepository
         return new PagedList<Category>(items, page, pageSize, totalCount);
     }
 
-    public async Task<List<Category>> GetListAsync(bool? isActive = null, CancellationToken ct = default)
+    public async Task<List<Category>> GetListAsync(bool? isActive = null, bool? isFeatured = null, CancellationToken ct = default)
     {
         var query = context.Categories
             .AsNoTracking()
@@ -94,6 +101,11 @@ public class CategoryRepository(CatalogDbContext context) : ICategoryRepository
         if (isActive.HasValue)
         {
             query = query.Where(c => c.IsActive == isActive.Value);
+        }
+
+        if (isFeatured.HasValue)
+        {
+            query = query.Where(c => c.IsFeatured == isFeatured.Value);
         }
 
         return await query

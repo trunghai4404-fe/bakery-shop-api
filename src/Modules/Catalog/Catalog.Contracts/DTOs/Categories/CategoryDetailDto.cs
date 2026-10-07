@@ -10,6 +10,7 @@ public class CategoryDetailDto
     public string? ParentName { get; set; }
     public string? ImageUrl { get; set; }
     public int SortOrder { get; set; }
+    public bool IsFeatured { get; set; }
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public string? CreatedBy { get; set; }

@@ -10,6 +10,7 @@ public record CreateCategoryCommand(
     string? Description = null,
     long? ParentId = null,
     string? ImageUrl = null,
+    bool IsFeatured = false,
     bool IsActive = true,
     int SortOrder = 0
 ) : IRequest<Result<CreateCategoryResponse>>;

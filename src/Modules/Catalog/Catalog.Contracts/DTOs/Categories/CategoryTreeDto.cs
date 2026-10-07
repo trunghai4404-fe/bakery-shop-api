@@ -9,6 +9,7 @@ public class CategoryTreeDto
     public long? ParentId { get; set; }
     public string? ImageUrl { get; set; }
     public int SortOrder { get; set; }
+    public bool IsFeatured { get; set; }
     public bool IsActive { get; set; }
     public List<CategoryTreeDto> Children { get; set; } = new();
 }

@@ -29,6 +29,7 @@ public class GetCategoryTreeQueryHandler(
                 ParentId = c.ParentId,
                 ImageUrl = c.ImageUrl,
                 SortOrder = c.SortOrder,
+                IsFeatured = c.IsFeatured,
                 IsActive = c.IsActive,
                 Children = new List<CategoryTreeDto>()
             });

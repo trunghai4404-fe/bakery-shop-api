@@ -19,6 +19,7 @@ public class GetAllCategoriesQueryHandler(
             request.IsActive,
             request.ParentId,
             request.IsRoot,
+            request.IsFeatured,
             request.SortBy,
             request.IsDescending,
             request.Page,
@@ -36,6 +37,7 @@ public class GetAllCategoriesQueryHandler(
             ParentName = c.Parent?.Name,
             ImageUrl = c.ImageUrl,
             SortOrder = c.SortOrder,
+            IsFeatured = c.IsFeatured,
             IsActive = c.IsActive,
             CreatedAt = c.CreatedAt,
             ChildrenCount = c.Children?.Count ?? 0
