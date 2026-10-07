@@ -23,6 +23,7 @@ public class CategoryController(ISender sender) : ApiControllerBase
         [FromQuery] bool? isActive,
         [FromQuery] long? parentId,
         [FromQuery] bool? isRoot,
+        [FromQuery] bool? isFeatured,
         [FromQuery] string? sortBy,
         [FromQuery] bool isDescending = false,
         [FromQuery] int page = 1,
@@ -34,6 +35,7 @@ public class CategoryController(ISender sender) : ApiControllerBase
             isActive,
             parentId,
             isRoot,
+            isFeatured,
             sortBy,
             isDescending,
             page,
@@ -80,7 +82,8 @@ public class CategoryController(ISender sender) : ApiControllerBase
             request.Description,
             request.ParentId,
             request.ImageUrl,
-            request.SortOrder
+            request.SortOrder,
+            request.IsFeatured
         );
 
         var result = await sender.Send(command, ct);

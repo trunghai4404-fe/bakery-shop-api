@@ -10,13 +10,14 @@ public interface ICategoryRepository
         bool? isActive,
         long? parentId,
         bool? isRoot,
+        bool? isFeatured,
         string? sortBy,
         bool isDescending,
         int page,
         int pageSize,
         CancellationToken ct = default
     );
-    Task<List<Category>> GetListAsync(bool? isActive = null, CancellationToken ct = default);
+    Task<List<Category>> GetListAsync(bool? isActive = null, bool? isFeatured = null, CancellationToken ct = default);
     Task<List<Category>> GetAllCategoriesAsync(CancellationToken ct = default);
     Task<List<Category>> GetRootCategoriesAsync(CancellationToken ct = default);
     Task<Category?> GetByIdAsync(long id, CancellationToken ct = default);

@@ -10,6 +10,7 @@ public record GetAllCategoriesQuery(
     bool? IsActive = null,
     long? ParentId = null,
     bool? IsRoot = null,
+    bool? IsFeatured = null,
     string? SortBy = null,
     bool IsDescending = false,
     int Page = 1,

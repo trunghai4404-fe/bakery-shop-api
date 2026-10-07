@@ -13,6 +13,7 @@ public class Category : AuditableEntity<long>
     public long? ParentId { get; private set; }
     public string? ImageUrl { get; private set; }
     public int SortOrder { get; private set; }
+    public bool IsFeatured { get; private set; }
     public bool IsActive { get; private set; }
 
     public Category? Parent { get; private set; }
@@ -29,6 +30,7 @@ public class Category : AuditableEntity<long>
         string? description,
         long? parentId,
         string? imageUrl,
+        bool isFeatured,
         bool isActive,
         int sortOrder = 0)
     {
@@ -37,6 +39,7 @@ public class Category : AuditableEntity<long>
         Description = description;
         ParentId = parentId;
         ImageUrl = imageUrl;
+        IsFeatured  = isFeatured;
         IsActive = isActive;
         SortOrder = sortOrder;
     }
@@ -47,6 +50,7 @@ public class Category : AuditableEntity<long>
         string? description,
         long? parentId,
         string? imageUrl,
+        bool isFeatured,
         bool isActive,
         int sortOrder = 0)
     {
@@ -60,7 +64,7 @@ public class Category : AuditableEntity<long>
             return Result.Failure<Category>(Error.Validation(ErrorCode.ValidationError, "Category slug is required"));
         }
 
-        var category = new Category(name, slug, description, parentId, imageUrl, isActive, sortOrder);
+        var category = new Category(name, slug, description, parentId, imageUrl, isFeatured, isActive, sortOrder);
         return Result.Success(category);
     }
 
@@ -70,6 +74,7 @@ public class Category : AuditableEntity<long>
         string? description,
         long? parentId,
         string? imageUrl,
+        bool isFeatured,
         int sortOrder)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -87,6 +92,7 @@ public class Category : AuditableEntity<long>
         Description = description;
         ParentId = parentId;
         ImageUrl = imageUrl;
+        IsFeatured = isFeatured;
         SortOrder = sortOrder;
 
         return Result.Success();

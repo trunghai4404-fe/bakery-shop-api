@@ -27,7 +27,6 @@ public class AuthController(ISender sender) : ApiControllerBase
         return HandleResult(result);
     }
 
-    [Authorize]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command, CancellationToken ct)
     {

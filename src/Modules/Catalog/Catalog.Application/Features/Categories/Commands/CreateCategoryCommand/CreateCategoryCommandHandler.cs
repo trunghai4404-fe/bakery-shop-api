@@ -51,6 +51,7 @@ public class CreateCategoryCommandHandler(
             description: request.Description?.Trim(),
             parentId: request.ParentId,
             imageUrl: request.ImageUrl?.Trim(),
+            isFeatured: request.IsFeatured,
             isActive: request.IsActive,
             sortOrder: request.SortOrder
         );
@@ -75,6 +76,7 @@ public class CreateCategoryCommandHandler(
             Description = category.Description,
             ParentId = category.ParentId,
             ImageUrl = category.ImageUrl,
+            IsFeatured = category.IsFeatured,
             IsActive = category.IsActive,
             SortOrder = category.SortOrder
         };

@@ -32,6 +32,7 @@ public class GetCategoryDetailQueryHandler(
                 ParentName = category.Name,
                 ImageUrl = c.ImageUrl,
                 SortOrder = c.SortOrder,
+                IsFeatured = c.IsFeatured,
                 IsActive = c.IsActive,
                 CreatedAt = c.CreatedAt,
                 ChildrenCount = c.Children?.Count ?? 0
@@ -47,6 +48,7 @@ public class GetCategoryDetailQueryHandler(
             ParentName = category.Parent?.Name,
             ImageUrl = category.ImageUrl,
             SortOrder = category.SortOrder,
+            IsFeatured = category.IsFeatured,
             IsActive = category.IsActive,
             CreatedAt = category.CreatedAt,
             CreatedBy = category.CreatedBy,
