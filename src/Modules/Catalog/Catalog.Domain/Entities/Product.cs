@@ -18,9 +18,19 @@ public class Product : AuditableEntity<long>, IAuditableEntity
     public ICollection<ProductCategory> ProductCategories { get; private set; } = new List<ProductCategory>();
     public ICollection<ProductVariant> ProductVariants { get; private set; } = new List<ProductVariant>();
     public ICollection<ProductImage> ProductImages { get; private set; } = new List<ProductImage>();
+    public ICollection<ProductAccessory> ProductAccessories { get; private set; } = new List<ProductAccessory>();
     
     public record ImageData(long Id, string DesktopUrl, string MobileUrl, int SortOrder, bool IsPrimary);
     public record VariantData(long Id, string Name, string Sku, decimal Price, int StockQuantity, bool IsActive = true, int SortOrder = 0);
+    public record AccessoryData(
+        long AccessoryProductId,
+        int DefaultQuantity = 1,
+        bool IsIncluded = true,
+        int SortOrder = 0,
+        bool IsMultiSelect = false,
+        int? MaxSelectCount = null,
+        bool IsRequired = false
+    );
 
     private Product()
     { }
@@ -197,6 +207,91 @@ public class Product : AuditableEntity<long>, IAuditableEntity
             if (ProductCategories.All(pc => pc.CategoryId != categoryId))
             {
                 ProductCategories.Add(new ProductCategory(Id, categoryId));
+            }
+        }
+    }
+
+    public void AddAccessory(
+        long accessoryProductId,
+        int defaultQuantity = 1,
+        bool isIncluded = true,
+        int sortOrder = 0,
+        bool isMultiSelect = false,
+        int? maxSelectCount = null,
+        bool isRequired = false)
+    {
+        if (Id != 0 && accessoryProductId == Id) return;
+
+        var existing = ProductAccessories.FirstOrDefault(a => a.AccessoryProductId == accessoryProductId);
+        if (existing == null)
+        {
+            ProductAccessories.Add(new ProductAccessory(
+                Id,
+                accessoryProductId,
+                defaultQuantity,
+                isIncluded,
+                sortOrder,
+                isMultiSelect,
+                maxSelectCount,
+                isRequired));
+        }
+        else
+        {
+            existing.Update(
+                defaultQuantity,
+                isIncluded,
+                sortOrder,
+                isMultiSelect,
+                maxSelectCount,
+                isRequired);
+        }
+    }
+
+    public void RemoveAccessory(long accessoryProductId)
+    {
+        var item = ProductAccessories.FirstOrDefault(a => a.AccessoryProductId == accessoryProductId);
+        if (item != null)
+        {
+            ProductAccessories.Remove(item);
+        }
+    }
+
+    public void SyncAccessories(IReadOnlyCollection<AccessoryData> accessories)
+    {
+        var incomingIds = accessories.Select(x => x.AccessoryProductId).Distinct().ToList();
+
+        var toRemove = ProductAccessories.Where(a => !incomingIds.Contains(a.AccessoryProductId)).ToList();
+        foreach (var item in toRemove)
+        {
+            ProductAccessories.Remove(item);
+        }
+
+        foreach (var data in accessories)
+        {
+            if (Id != 0 && data.AccessoryProductId == Id) continue;
+
+            var existing = ProductAccessories.FirstOrDefault(a => a.AccessoryProductId == data.AccessoryProductId);
+            if (existing != null)
+            {
+                existing.Update(
+                    data.DefaultQuantity,
+                    data.IsIncluded,
+                    data.SortOrder,
+                    data.IsMultiSelect,
+                    data.MaxSelectCount,
+                    data.IsRequired);
+            }
+            else
+            {
+                ProductAccessories.Add(new ProductAccessory(
+                    Id,
+                    data.AccessoryProductId,
+                    data.DefaultQuantity,
+                    data.IsIncluded,
+                    data.SortOrder,
+                    data.IsMultiSelect,
+                    data.MaxSelectCount,
+                    data.IsRequired));
             }
         }
     }

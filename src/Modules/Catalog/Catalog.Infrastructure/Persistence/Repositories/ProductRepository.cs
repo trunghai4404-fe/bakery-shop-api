@@ -65,6 +65,8 @@ public class ProductRepository(CatalogDbContext context) : IProductRepository
             ("slug", false) => query.OrderBy(p => p.Slug),
             ("sku", true) => query.OrderByDescending(p => p.Sku),
             ("sku", false) => query.OrderBy(p => p.Sku),
+            ("price", true) => query.OrderByDescending(p => p.ProductVariants.Where(v => v.IsActive).Min(v => (decimal?)v.Price) ?? p.ProductVariants.Min(v => (decimal?)v.Price) ?? 0),
+            ("price", false) => query.OrderBy(p => p.ProductVariants.Where(v => v.IsActive).Min(v => (decimal?)v.Price) ?? p.ProductVariants.Min(v => (decimal?)v.Price) ?? 0),
             ("createdat", true) => query.OrderByDescending(p => p.CreatedAt),
             ("createdat", false) => query.OrderBy(p => p.CreatedAt),
             ("id", true) => query.OrderByDescending(p => p.Id),
@@ -97,6 +99,12 @@ public class ProductRepository(CatalogDbContext context) : IProductRepository
             .Include(p => p.ProductVariants)
             .Include(p => p.ProductCategories)
                 .ThenInclude(pc => pc.Category)
+            .Include(p => p.ProductAccessories)
+                .ThenInclude(pa => pa.AccessoryProduct)
+                    .ThenInclude(ap => ap!.ProductImages)
+            .Include(p => p.ProductAccessories)
+                .ThenInclude(pa => pa.AccessoryProduct)
+                    .ThenInclude(ap => ap!.ProductVariants)
             .AsSplitQuery()
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
@@ -107,6 +115,7 @@ public class ProductRepository(CatalogDbContext context) : IProductRepository
             .Include(p => p.ProductImages)
             .Include(p => p.ProductVariants)
             .Include(p => p.ProductCategories)
+            .Include(p => p.ProductAccessories)
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
@@ -119,6 +128,12 @@ public class ProductRepository(CatalogDbContext context) : IProductRepository
             .Include(p => p.ProductVariants)
             .Include(p => p.ProductCategories)
                 .ThenInclude(pc => pc.Category)
+            .Include(p => p.ProductAccessories)
+                .ThenInclude(pa => pa.AccessoryProduct)
+                    .ThenInclude(ap => ap!.ProductImages)
+            .Include(p => p.ProductAccessories)
+                .ThenInclude(pa => pa.AccessoryProduct)
+                    .ThenInclude(ap => ap!.ProductVariants)
             .AsSplitQuery()
             .FirstOrDefaultAsync(p => p.Slug.ToLower() == cleanSlug, ct);
     }

@@ -12,5 +12,6 @@ public record CreateProductCommand(
     bool IsActive = true,
     List<CreateProductImageRequest>? Images = null,
     List<CreateProductVariantRequest>? Variants = null,
-    List<long>? CategoryIds = null
+    List<long>? CategoryIds = null,
+    List<ProductAccessoryRequest>? Accessories = null
 ) : IRequest<Result<CreateProductResponse>>;

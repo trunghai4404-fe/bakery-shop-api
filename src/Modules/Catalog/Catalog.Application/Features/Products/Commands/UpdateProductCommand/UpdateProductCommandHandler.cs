@@ -99,11 +99,27 @@ public class UpdateProductCommandHandler(
             product.SyncCategories(request.CategoryIds);
         }
 
-        // 9. Persist changes
+        // 9. Sync Accessories if provided
+        if (request.Accessories != null)
+        {
+            var accessoryDatas = request.Accessories.Select(a => new Product.AccessoryData(
+                a.AccessoryProductId,
+                a.DefaultQuantity,
+                a.IsIncluded,
+                a.SortOrder,
+                a.IsMultiSelect,
+                a.MaxSelectCount,
+                a.IsRequired
+            )).ToList();
+
+            product.SyncAccessories(accessoryDatas);
+        }
+
+        // 10. Persist changes
         productRepository.Update(product);
         await unitOfWork.SaveChangesAsync(ct);
 
-        // 10. Map response
+        // 11. Map response
         var response = new UpdateProductResponse
         {
             Id = product.Id,

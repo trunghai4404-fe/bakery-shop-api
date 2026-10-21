@@ -15,4 +15,5 @@ public class ProductDetailDto
     public List<ProductImageDto> Images { get; set; } = new();
     public List<ProductVariantDto> Variants { get; set; } = new();
     public List<ProductCategoryDto> Categories { get; set; } = new();
+    public List<ProductAccessoryDto> Accessories { get; set; } = new();
 }

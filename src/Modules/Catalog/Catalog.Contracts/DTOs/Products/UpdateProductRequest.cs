@@ -8,5 +8,6 @@ public record UpdateProductRequest(
     bool IsActive = true,
     List<UpdateProductImageRequest>? Images = null,
     List<UpdateProductVariantRequest>? Variants = null,
-    List<long>? CategoryIds = null
+    List<long>? CategoryIds = null,
+    List<ProductAccessoryRequest>? Accessories = null
 );

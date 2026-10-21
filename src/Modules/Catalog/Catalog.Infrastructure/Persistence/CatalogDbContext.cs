@@ -15,6 +15,7 @@ public class CatalogDbContext(
     public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
     public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+    public DbSet<ProductAccessory> ProductAccessories => Set<ProductAccessory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

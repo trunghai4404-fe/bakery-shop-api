@@ -51,5 +51,21 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
         RuleForEach(x => x.CategoryIds)
             .GreaterThan(0).WithMessage("Category ID must be greater than 0.")
             .When(x => x.CategoryIds != null);
+
+        RuleForEach(x => x.Accessories).ChildRules(acc =>
+        {
+            acc.RuleFor(a => a.AccessoryProductId)
+                .GreaterThan(0).WithMessage("Accessory product ID must be greater than 0.");
+
+            acc.RuleFor(a => a.DefaultQuantity)
+                .GreaterThan(0).WithMessage("Default quantity must be greater than 0.");
+
+            acc.RuleFor(a => a.SortOrder)
+                .GreaterThanOrEqualTo(0).WithMessage("Sort order must be greater than or equal to 0.");
+
+            acc.RuleFor(a => a.MaxSelectCount)
+                .GreaterThan(0).WithMessage("Max select count must be greater than 0.")
+                .When(a => a.MaxSelectCount.HasValue);
+        }).When(x => x.Accessories != null);
     }
 }

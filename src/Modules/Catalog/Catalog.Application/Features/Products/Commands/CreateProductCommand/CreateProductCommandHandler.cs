@@ -95,11 +95,28 @@ public class CreateProductCommandHandler(
             }
         }
 
-        // 8. Persist entity
+        // 8. Add Accessories if provided
+        if (request.Accessories != null && request.Accessories.Count > 0)
+        {
+            foreach (var acc in request.Accessories)
+            {
+                product.AddAccessory(
+                    accessoryProductId: acc.AccessoryProductId,
+                    defaultQuantity: acc.DefaultQuantity,
+                    isIncluded: acc.IsIncluded,
+                    sortOrder: acc.SortOrder,
+                    isMultiSelect: acc.IsMultiSelect,
+                    maxSelectCount: acc.MaxSelectCount,
+                    isRequired: acc.IsRequired
+                );
+            }
+        }
+
+        // 9. Persist entity
         await productRepository.AddAsync(product, ct);
         await unitOfWork.SaveChangesAsync(ct);
 
-        // 9. Map to response
+        // 10. Map to response
         var response = new CreateProductResponse
         {
             Id = product.Id,

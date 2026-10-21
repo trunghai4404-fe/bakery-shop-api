@@ -64,6 +64,39 @@ public class GetProductByIdQueryHandler(
                     CategoryId = pc.CategoryId,
                     Name = pc.Category!.Name,
                     Slug = pc.Category.Slug
+                }).ToList(),
+            Accessories = product.ProductAccessories
+                .OrderBy(pa => pa.SortOrder)
+                .Select(pa => new ProductAccessoryDto
+                {
+                    AccessoryProductId = pa.AccessoryProductId,
+                    Name = pa.AccessoryProduct?.Name ?? string.Empty,
+                    Slug = pa.AccessoryProduct?.Slug ?? string.Empty,
+                    Sku = pa.AccessoryProduct?.Sku ?? string.Empty,
+                    Price = pa.AccessoryProduct?.ProductVariants.Where(v => v.IsActive).Min(v => (decimal?)v.Price) 
+                            ?? pa.AccessoryProduct?.ProductVariants.Min(v => (decimal?)v.Price),
+                    PrimaryImageUrl = pa.AccessoryProduct?.ProductImages.FirstOrDefault(i => i.IsPrimary)?.DesktopUrl 
+                                      ?? pa.AccessoryProduct?.ProductImages.OrderBy(i => i.SortOrder).FirstOrDefault()?.DesktopUrl,
+                    DefaultQuantity = pa.DefaultQuantity,
+                    IsIncluded = pa.IsIncluded,
+                    SortOrder = pa.SortOrder,
+                    IsMultiSelect = pa.IsMultiSelect,
+                    MaxSelectCount = pa.MaxSelectCount,
+                    IsRequired = pa.IsRequired,
+                    Variants = pa.AccessoryProduct?.ProductVariants
+                        .Where(v => v.IsActive)
+                        .OrderBy(v => v.SortOrder)
+                        .Select(v => new ProductVariantDto
+                        {
+                            Id = v.Id,
+                            ProductId = v.ProductId,
+                            Name = v.Name,
+                            Sku = v.Sku,
+                            Price = v.Price,
+                            StockQuantity = v.StockQuantity,
+                            IsActive = v.IsActive,
+                            SortOrder = v.SortOrder
+                        }).ToList() ?? new List<ProductVariantDto>()
                 }).ToList()
         };
 

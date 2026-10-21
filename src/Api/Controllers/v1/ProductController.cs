@@ -81,7 +81,8 @@ public class ProductController(ISender sender) : ApiControllerBase
             request.IsActive,
             request.Images,
             request.Variants,
-            request.CategoryIds
+            request.CategoryIds,
+            request.Accessories
         );
 
         var result = await sender.Send(command, ct);
