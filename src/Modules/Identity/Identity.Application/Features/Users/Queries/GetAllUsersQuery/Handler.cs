@@ -40,7 +40,8 @@ public class Handler(
             IsActive = u.IsActive,
             CreatedAt = u.CreatedAt,
             IsDeleted = u.IsDeleted,
-            RoleCode = u.UserRoles?.Select(ur => ur.Role.Code).ToList() ?? new List<string>()
+            RoleCode = u.UserRoles?.Select(ur => ur.Role.Code).ToList() ?? new List<string>(),
+            RoleName = u.UserRoles?.Select(ur => ur.Role.Name).ToList() ?? new List<string>()
         }).ToList();
 
         var response = new PagedList<ListUsersDto>(

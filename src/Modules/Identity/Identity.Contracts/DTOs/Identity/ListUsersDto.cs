@@ -11,5 +11,6 @@ public class ListUsersDto
     public DateTime? CreatedAt { get; set; }
     public bool IsDeleted { get; set; }
 
-    public List<string>? RoleCode = new List<string>();
+    public List<string> RoleCode { get; set; } = new();
+    public List<string> RoleName { get; set; } = new();
 }

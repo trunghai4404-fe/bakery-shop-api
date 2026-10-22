@@ -39,11 +39,13 @@ public class BannerController(ISender sender) : ApiControllerBase
         [FromQuery] string? search,
         [FromQuery] bool? isActive,
         [FromQuery] BannerStatus? status,
+        [FromQuery] string? sortBy,
+        [FromQuery] bool isDescending = false,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         CancellationToken ct = default)
     {
-        var query = new GetBannersQuery(search, isActive, status, page, pageSize);
+        var query = new GetBannersQuery(search, isActive, status, sortBy, isDescending, page, pageSize);
         var result = await sender.Send(query, ct);
         return HandleResult(result);
     }
@@ -77,7 +79,8 @@ public class BannerController(ISender sender) : ApiControllerBase
             request.IsActive,
             request.StartDate,
             request.EndDate,
-            request.Metadata
+            request.Metadata,
+            request.SortOrder
         );
 
         var result = await sender.Send(command, ct);
@@ -103,7 +106,8 @@ public class BannerController(ISender sender) : ApiControllerBase
             request.IsActive,
             request.StartDate,
             request.EndDate,
-            request.Metadata
+            request.Metadata,
+            request.SortOrder
         );
 
         var result = await sender.Send(command, ct);

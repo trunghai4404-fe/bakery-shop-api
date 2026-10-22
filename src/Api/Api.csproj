@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
-    <ProjectReference Include="..\Modules\Contents\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Contents\Contents.Infrastructure\Contents.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>

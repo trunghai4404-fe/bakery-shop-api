@@ -35,6 +35,9 @@ public class Handler(
             Code = r.Code,
             Name = r.Name,
             Description = r.Description,
+            IsSystemRole = r.IsSystemRole,
+            CreatedAt = r.CreatedAt,
+            UpdatedAt = r.LastModifiedAt,
             Permissions = r.RolePermissions?
                 .Select(rp => rp.Permission.Code)
                 .ToList() ?? new List<string>()

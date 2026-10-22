@@ -43,6 +43,7 @@ public class Handler(
             Code = role.Code,
             Name = role.Name,
             Description = role.Description,
+            IsSystemRole = role.IsSystemRole,
             Permissions = permissions,
             CreatedAt = role.CreatedAt,
             CreatedBy = role.CreatedBy ?? string.Empty,

@@ -12,10 +12,10 @@
     <Project Path="src/Modules/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Contents/">
-    <Project Path="src/Modules/Contents/Application/Application.csproj" />
-    <Project Path="src/Modules/Contents/Contracts/Contracts.csproj" />
-    <Project Path="src/Modules/Contents/Domain/Domain.csproj" />
-    <Project Path="src/Modules/Contents/Infrastructure/Infrastructure.csproj" />
+    <Project Path="src/Modules/Contents/Contents.Application/Contents.Application.csproj" />
+    <Project Path="src/Modules/Contents/Contents.Contracts/Contents.Contracts.csproj" />
+    <Project Path="src/Modules/Contents/Contents.Domain/Contents.Domain.csproj" />
+    <Project Path="src/Modules/Contents/Contents.Infrastructure/Contents.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Identity/">
     <Project Path="src/Modules/Identity/Identity.Application/Identity.Application.csproj" />

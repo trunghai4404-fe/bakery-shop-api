@@ -44,7 +44,7 @@ public class CreateCategoryCommandHandler(
             }
         }
 
-        // 4. Create Category entity via Domain factory
+        // 4. Create Category entity via Contents.Domain factory
         var categoryResult = Category.Create(
             name: request.Name.Trim(),
             slug: slug,
