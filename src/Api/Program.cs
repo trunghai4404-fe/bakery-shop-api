@@ -40,8 +40,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseCustomSwagger();
 }
-
-app.UseHttpsRedirection();
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("AllowFrontend");
 

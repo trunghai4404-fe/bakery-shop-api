@@ -11,14 +11,12 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
       <ProjectReference Include="..\..\..\Shared\Shared.csproj" />
+      <ProjectReference Include="..\Contents.Contracts\Contents.Contracts.csproj" />
       <ProjectReference Include="..\Contents.Application\Contents.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Npgsql" Version="10.0.3" />
     </ItemGroup>
 

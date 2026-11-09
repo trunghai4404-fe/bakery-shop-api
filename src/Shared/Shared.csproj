@@ -18,6 +18,7 @@
       <PackageReference Include="AWSSDK.S3" Version="4.0.103.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.11" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.13" />
     </ItemGroup>
 
 </Project>

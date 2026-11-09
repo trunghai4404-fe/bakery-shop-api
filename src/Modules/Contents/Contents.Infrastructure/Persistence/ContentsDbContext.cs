@@ -11,6 +11,9 @@ public class ContentsDbContext(
     ICurrentUserService? currentUserService = null) : BaseDbContext(options, currentUserService), IContentsUnitOfWork
 {
     public DbSet<Banner> Banners => Set<Banner>();
+    public DbSet<Province> Provinces => Set<Province>();
+    public DbSet<District> Districts => Set<District>();
+    public DbSet<Ward> Wards => Set<Ward>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
