@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modules\Basket\Basket.Infrastructure\Basket.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Contents\Contents.Infrastructure\Contents.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />

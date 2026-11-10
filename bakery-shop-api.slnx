@@ -5,6 +5,12 @@
     <Project Path="src/SharedKernel/SharedKernel.csproj" />
   </Folder>
   <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Basket/">
+    <Project Path="src/Modules/Basket/Basket.Application/Basket.Application.csproj" />
+    <Project Path="src/Modules/Basket/Basket.Contracts/Basket.Contracts.csproj" />
+    <Project Path="src/Modules/Basket/Basket.Domain/Basket.Domain.csproj" />
+    <Project Path="src/Modules/Basket/Basket.Infrastructure/Basket.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Catalog/">
     <Project Path="src/Modules/Catalog/Catalog.Application/Catalog.Application.csproj" />
     <Project Path="src/Modules/Catalog/Catalog.Contracts/Catalog.Contracts.csproj" />

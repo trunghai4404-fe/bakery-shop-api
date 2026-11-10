@@ -1,6 +1,8 @@
-﻿using Catalog.Domain.Repositories;
+﻿using Catalog.Contracts.Interfaces;
+using Catalog.Domain.Repositories;
 using Catalog.Infrastructure.Persistence;
 using Catalog.Infrastructure.Persistence.Repositories;
+using Catalog.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<ICatalogUnitOfWork>(sp => sp.GetRequiredService<CatalogDbContext>());
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ICatalogContract, CatalogContract>();
 
         return services;
     }

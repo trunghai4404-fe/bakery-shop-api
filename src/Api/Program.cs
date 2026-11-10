@@ -1,4 +1,6 @@
 using Api.Extensions;
+using Basket.Application;
+using Basket.Infrastructure;
 using Catalog.Application;
 using Catalog.Infrastructure;
 using Contents.Application;
@@ -28,9 +30,12 @@ builder.Services.AddSharedInfrastructure();
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
 builder.Services.AddContentsInfrastructure(builder.Configuration);
+builder.Services.AddBasketInfrastructure(builder.Configuration);
+
 builder.Services.AddIdentityApplication();
 builder.Services.AddContentsApplication(); 
 builder.Services.AddCatalogApplication();
+builder.Services.AddBasketApplication();
 
 var app = builder.Build();
 await Identity.Infrastructure.Persistence.IdentityDataSeeder.SeedAsync(app.Services);

@@ -48,4 +48,12 @@ public static class ErrorCode
 
     // Contents / Banner
     public const string BannerNotFound = "BANNER_NOT_FOUND";
+    
+    //Basket
+    public const string BasketNotFound = "BASKET_NOT_FOUND";
+    public const string BasketEmpty = "BASKET_EMPTY";
+    public const string ShippingInfoRequired  = "SHIPPING_INFO_REQUIRED";
+    public const string InvalidQuantity = "INVALID_QUANTITY";
+    public const string OutOfStock = "OUTOFSTOCK";
+    public const string ProductNotFoundOrInactive = "PRODUCT_NOT_FOUND";
 }
