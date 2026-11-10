@@ -4,7 +4,6 @@ public record ShippingInfo(
     string Address,
     int ProvinceId,
     int WardId,
-    double? Latitude,
-    double? Longitude,
-    string? Note = null
+    double? Latitude = null,
+    double? Longitude = null
 );

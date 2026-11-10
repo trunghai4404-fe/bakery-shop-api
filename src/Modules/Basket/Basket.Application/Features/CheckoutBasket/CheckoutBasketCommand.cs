@@ -4,19 +4,19 @@ using Basket.Domain.Errors;
 using Basket.Domain.Repositories;
 using Catalog.Contracts.Interfaces;
 using MediatR;
+using Ordering.Contracts.DTOs;
+using Ordering.Contracts.Interfaces;
 using SharedKernel.Domain;
 
 namespace Basket.Application.Features.CheckoutBasket;
 
-public record CheckoutBasketCommand(
-    Guid BasketId,
-    CheckoutBasketRequest Request
-) : IRequest<Result<CheckoutResultDto>>;
+public record CheckoutBasketCommand(Guid BasketId) : IRequest<Result<CheckoutResultDto>>;
 
 public class CheckoutBasketCommandHandler(
     IBasketRepository basketRepository,
     IBasketUnitOfWork unitOfWork,
-    ICatalogContract catalogContract
+    ICatalogContract catalogContract,
+    IOrderingContract orderingContract
 ) : IRequestHandler<CheckoutBasketCommand, Result<CheckoutResultDto>>
 {
     public async Task<Result<CheckoutResultDto>> Handle(CheckoutBasketCommand command, CancellationToken ct)
@@ -37,7 +37,7 @@ public class CheckoutBasketCommandHandler(
             return Result.Failure<CheckoutResultDto>(BasketErrors.ShippingInfoRequired);
         }
 
-        // Tái kiểm tra Catalog lần cuối trước khi chốt đơn
+        // 1. Tái kiểm tra Catalog lần cuối trước khi chốt đơn
         var variantIds = basket.Items.Select(i => i.VariantId).Distinct().ToList();
         var catalogVariants = await catalogContract.GetVariantsByIdsAsync(variantIds, ct);
         var catalogDict = catalogVariants.ToDictionary(v => v.VariantId);
@@ -55,21 +55,64 @@ public class CheckoutBasketCommandHandler(
             }
         }
 
-        // Snapshot tạo đơn hàng (Sẽ kết nối Order Module)
-        var orderId = Guid.NewGuid();
-        var orderCode = $"ORD-{DateTime.UtcNow:yyyyMMdd}-{Random.Shared.Next(1000, 9999)}";
-        var totalAmount = basket.Subtotal;
+        // 2. Chuyển đổi dữ liệu từ chính giỏ hàng và gọi sang Ordering Module để tạo Đơn hàng thực tế
+        var orderItems = basket.Items.Select(i => new CreateOrderItemRequest(
+            i.ProductId,
+            i.ProductName,
+            i.VariantId,
+            i.VariantName,
+            i.Quantity,
+            i.Price,
+            i.DiscountPrice,
+            i.DiscountPercent,
+            i.FinalPrice
+        )).ToList();
 
-        // Chỉ xóa giỏ hàng KHI đơn hàng được khởi tạo thành công
+        var customerInfo = new OrderCustomerInfoDto(
+            basket.CustomerInfo.Name,
+            basket.CustomerInfo.Phone,
+            basket.CustomerInfo.Email
+        );
+
+        OrderShippingAddressDto? shippingAddress = null;
+        if (basket.FulfillmentType == FulfillmentType.Delivery && basket.ShippingInfo != null)
+        {
+            shippingAddress = new OrderShippingAddressDto(
+                basket.ShippingInfo.Address,
+                basket.ShippingInfo.ProvinceId,
+                basket.ShippingInfo.WardId,
+                basket.ShippingInfo.Latitude,
+                basket.ShippingInfo.Longitude
+            );
+        }
+
+        var createOrderRequest = new CreateOrderFromBasketRequest(
+            basket.CustomerId,
+            basket.SessionId,
+            basket.FulfillmentType.ToString(),
+            customerInfo,
+            shippingAddress,
+            basket.PaymentMethod,
+            basket.ShippingMethod,
+            orderItems,
+            basket.Note
+        );
+
+        var orderResult = await orderingContract.CreateOrderFromBasketAsync(createOrderRequest, ct);
+        if (!orderResult.IsSuccess)
+        {
+            return Result.Failure<CheckoutResultDto>(orderResult.Error);
+        }
+
+        // 3. Chỉ xóa sạch giỏ hàng KHI đơn hàng được khởi tạo thành công vào Database
         basket.Clear();
         basketRepository.Update(basket);
         await unitOfWork.SaveChangesAsync(ct);
 
         var result = new CheckoutResultDto(
-            orderId,
-            orderCode,
-            totalAmount,
-            "Pending"
+            orderResult.Value.OrderCode,
+            orderResult.Value.TotalAmount,
+            orderResult.Value.PaymentStatus
         );
 
         return Result.Success(result);

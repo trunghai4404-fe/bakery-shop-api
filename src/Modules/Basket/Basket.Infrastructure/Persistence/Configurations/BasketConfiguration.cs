@@ -28,6 +28,14 @@ public class BasketConfiguration : IEntityTypeConfiguration<Basket.Domain.Entiti
         builder.Property(b => b.FulfillmentType)
             .IsRequired();
 
+        builder.Property(b => b.PaymentMethod)
+            .IsRequired()
+            .HasMaxLength(50)
+            .HasDefaultValue("COD");
+
+        builder.Property(b => b.ShippingMethod)
+            .HasMaxLength(50);
+
         builder.Property(b => b.Note)
             .HasMaxLength(1000);
 

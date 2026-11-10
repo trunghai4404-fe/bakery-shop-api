@@ -10,9 +10,8 @@ public record ShippingInfoDto(
     string Address,
     int ProvinceId,
     int WardId,
-    double? Latitude,
-    double? Longitude,
-    string? Note
+    double? Latitude = null,
+    double? Longitude = null
 );
 
 public record BasketItemWarningDto(
@@ -42,6 +41,8 @@ public record BasketDto(
     string FulfillmentType,
     CustomerInfoDto CustomerInfo,
     ShippingInfoDto? ShippingInfo,
+    string PaymentMethod,
+    string? ShippingMethod,
     List<BasketItemDto> Items,
     decimal Subtotal,
     string? Note,
@@ -56,27 +57,25 @@ public record BasketItemRequest(
 );
 
 public record CreateBasketRequest(
-    string? FulfillmentType,
-    List<BasketItemRequest>? Items,
-    string? Note
+    string? FulfillmentType = null,
+    string? PaymentMethod = null,
+    string? ShippingMethod = null,
+    List<BasketItemRequest>? Items = null,
+    string? Note = null
 );
 
 public record UpdateBasketRequest(
     string FulfillmentType,
     CustomerInfoDto? CustomerInfo,
     ShippingInfoDto? ShippingInfo,
+    string? PaymentMethod,
+    string? ShippingMethod,
     List<BasketItemRequest> Items,
     string? Note
 );
 
-public record CheckoutBasketRequest(
-    string PaymentMethod,
-    string? Note
-);
-
 public record CheckoutResultDto(
-    Guid OrderId,
     string OrderCode,
     decimal TotalAmount,
-    string Status
+    string PaymentStatus
 );

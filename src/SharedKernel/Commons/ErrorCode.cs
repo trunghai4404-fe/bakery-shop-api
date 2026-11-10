@@ -56,4 +56,10 @@ public static class ErrorCode
     public const string InvalidQuantity = "INVALID_QUANTITY";
     public const string OutOfStock = "OUTOFSTOCK";
     public const string ProductNotFoundOrInactive = "PRODUCT_NOT_FOUND";
+
+    // Ordering
+    public const string OrderNotFound = "ORDER_NOT_FOUND";
+    public const string InvalidPaymentMethod = "INVALID_PAYMENT_METHOD";
+    public const string InvalidShippingMethod = "INVALID_SHIPPING_METHOD";
+    public const string EmptyOrder = "EMPTY_ORDER";
 }

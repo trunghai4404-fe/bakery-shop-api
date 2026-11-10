@@ -52,9 +52,10 @@ public static class BasketMappingExtensions
                 basket.ShippingInfo.ProvinceId,
                 basket.ShippingInfo.WardId,
                 basket.ShippingInfo.Latitude,
-                basket.ShippingInfo.Longitude,
-                basket.ShippingInfo.Note
+                basket.ShippingInfo.Longitude
             ),
+            basket.PaymentMethod,
+            basket.ShippingMethod,
             items,
             basket.Subtotal,
             basket.Note,

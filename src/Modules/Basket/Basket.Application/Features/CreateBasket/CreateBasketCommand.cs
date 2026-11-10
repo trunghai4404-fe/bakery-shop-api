@@ -104,7 +104,13 @@ public class CreateBasketCommandHandler(
         if (!string.IsNullOrWhiteSpace(command.Request.FulfillmentType) &&
             Enum.TryParse<FulfillmentType>(command.Request.FulfillmentType, true, out var fType))
         {
-            basket.UpdateFulfillment(fType, basket.CustomerInfo, basket.ShippingInfo, command.Request.Note ?? basket.Note);
+            basket.UpdateFulfillment(
+                fType, 
+                basket.CustomerInfo, 
+                basket.ShippingInfo, 
+                command.Request.PaymentMethod ?? basket.PaymentMethod,
+                command.Request.ShippingMethod ?? basket.ShippingMethod,
+                command.Request.Note ?? basket.Note);
         }
 
         if (existingBasket == null)

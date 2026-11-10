@@ -130,15 +130,14 @@ public class UpdateBasketCommandHandler(
                 req.ShippingInfo.ProvinceId,
                 req.ShippingInfo.WardId,
                 req.ShippingInfo.Latitude,
-                req.ShippingInfo.Longitude,
-                req.ShippingInfo.Note
+                req.ShippingInfo.Longitude
             );
         }
 
         Enum.TryParse<FulfillmentType>(req.FulfillmentType, true, out var fulfillmentType);
 
         basket.UpdateItems(newItems);
-        basket.UpdateFulfillment(fulfillmentType, customerInfo, shippingInfo, req.Note);
+        basket.UpdateFulfillment(fulfillmentType, customerInfo, shippingInfo, req.PaymentMethod, req.ShippingMethod, req.Note);
 
         basketRepository.Update(basket);
         await unitOfWork.SaveChangesAsync(ct);

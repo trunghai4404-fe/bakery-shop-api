@@ -7,6 +7,8 @@ using Contents.Application;
 using Contents.Infrastructure;
 using Identity.Application;
 using Identity.Infrastructure;
+using Ordering.Application;
+using Ordering.Infrastructure;
 using Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,14 +33,17 @@ builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
 builder.Services.AddContentsInfrastructure(builder.Configuration);
 builder.Services.AddBasketInfrastructure(builder.Configuration);
+builder.Services.AddOrderingInfrastructure(builder.Configuration);
 
 builder.Services.AddIdentityApplication();
 builder.Services.AddContentsApplication(); 
 builder.Services.AddCatalogApplication();
 builder.Services.AddBasketApplication();
+builder.Services.AddOrderingApplication();
 
 var app = builder.Build();
 await Identity.Infrastructure.Persistence.IdentityDataSeeder.SeedAsync(app.Services);
+await Ordering.Infrastructure.Persistence.OrderingDataSeeder.SeedAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

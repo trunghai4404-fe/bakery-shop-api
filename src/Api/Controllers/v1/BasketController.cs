@@ -39,7 +39,7 @@ public class BasketController(ISender sender) : ApiControllerBase
     }
 
     /// <summary>
-    /// Cập nhật giỏ hàng: số lượng món, xóa món (số lượng = 0), hình thức nhận hàng (Pickup/Delivery), địa chỉ, ghi chú
+    /// Cập nhật giỏ hàng: số lượng món, xóa món (số lượng = 0), hình thức nhận hàng (Pickup/Delivery), địa chỉ, thanh toán, vận chuyển, ghi chú
     /// </summary>
     [HttpPut("{basketId:guid}")]
     public async Task<IActionResult> UpdateBasket(
@@ -64,15 +64,12 @@ public class BasketController(ISender sender) : ApiControllerBase
     }
 
     /// <summary>
-    /// Chốt đơn hàng từ giỏ hàng (Tạo Order và Clear giỏ hàng)
+    /// Chốt đơn hàng từ giỏ hàng (Tạo Order và Clear giỏ hàng) - Không cần gửi body, lấy toàn bộ thông tin từ Basket
     /// </summary>
     [HttpPost("{basketId:guid}/checkout")]
-    public async Task<IActionResult> Checkout(
-        [FromRoute] Guid basketId,
-        [FromBody] CheckoutBasketRequest request,
-        CancellationToken ct)
+    public async Task<IActionResult> Checkout([FromRoute] Guid basketId, CancellationToken ct)
     {
-        var command = new CheckoutBasketCommand(basketId, request);
+        var command = new CheckoutBasketCommand(basketId);
         var result = await sender.Send(command, ct);
         return HandleResult(result, "Đặt hàng thành công.");
     }
