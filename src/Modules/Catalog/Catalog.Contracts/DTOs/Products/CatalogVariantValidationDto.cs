@@ -8,5 +8,6 @@ public record CatalogVariantValidationDto(
     string Sku,
     decimal Price,
     int StockQuantity,
-    bool IsActive
+    bool IsActive,
+    string? ImageUrl = null
 );

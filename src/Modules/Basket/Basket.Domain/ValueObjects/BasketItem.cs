@@ -11,7 +11,8 @@ public record BasketItem(
     decimal DiscountPercent,
     decimal FinalPrice,
     Dictionary<string, object>? Promotion = null,
-    List<object>? Gifts = null
+    List<object>? Gifts = null,
+    string? ImageUrl = null
 )
 {
     public decimal TotalItemPrice => FinalPrice * Quantity;

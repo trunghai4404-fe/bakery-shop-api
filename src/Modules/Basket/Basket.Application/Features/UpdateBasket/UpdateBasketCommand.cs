@@ -110,7 +110,10 @@ public class UpdateBasketCommandHandler(
                     price,
                     discountPrice,
                     discountPercent,
-                    finalPrice
+                    finalPrice,
+                    Promotion: null,
+                    Gifts: null,
+                    ImageUrl: catalogVar.ImageUrl
                 ));
             }
         }

@@ -21,6 +21,9 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .IsRequired()
             .HasMaxLength(255);
 
+        builder.Property(i => i.ProductImageUrl)
+            .HasMaxLength(500);
+
         builder.Property(i => i.Price)
             .HasPrecision(18, 2);
 

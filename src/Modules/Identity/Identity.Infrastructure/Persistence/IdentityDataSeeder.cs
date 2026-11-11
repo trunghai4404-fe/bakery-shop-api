@@ -52,6 +52,10 @@ public static class IdentityDataSeeder
                 new(PermissionEnum.Banner.BannerCreate, "Thêm banner", null),
                 new(PermissionEnum.Banner.BannerUpdate, "Chỉnh sửa banner", null),
                 new(PermissionEnum.Banner.BannerDelete, "Xóa banner", null),
+
+                new(PermissionEnum.Order.OrderView, "Xem đơn hàng", null),
+                new(PermissionEnum.Order.OrderUpdate, "Cập nhật đơn hàng", null),
+                new(PermissionEnum.Order.OrderCancel, "Hủy đơn hàng", null),
             };
 
             foreach (var permission in defaultPermissions)
@@ -107,7 +111,6 @@ public static class IdentityDataSeeder
             const string password = "Admin@123";
             
             var adminUser = await context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == adminEmail.ToLower());
-
             if (adminUser == null)
             {
                 var passwordHash = passwordHasher.HashPassword(password);

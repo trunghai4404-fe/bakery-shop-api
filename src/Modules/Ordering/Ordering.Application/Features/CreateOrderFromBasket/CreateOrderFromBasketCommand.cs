@@ -39,6 +39,7 @@ public class CreateOrderFromBasketCommandHandler(
         decimal shippingFee = 0;
         string? shippingFeeNote = null;
         string? shippingMethodCode = null;
+        string? shippingMethodName = null;
 
         var isDelivery = string.Equals(req.FulfillmentType, "Delivery", StringComparison.OrdinalIgnoreCase);
         if (isDelivery)
@@ -51,6 +52,7 @@ public class CreateOrderFromBasketCommandHandler(
             }
 
             shippingMethodCode = shippingMethod.Code;
+            shippingMethodName = shippingMethod.Name;
             shippingFee = shippingMethod.Fee;
             shippingFeeNote = shippingMethod.FeeDescription;
         }
@@ -65,7 +67,8 @@ public class CreateOrderFromBasketCommandHandler(
             i.Price,
             i.DiscountPrice,
             i.DiscountPercent,
-            i.FinalPrice
+            i.FinalPrice,
+            i.ProductImageUrl
         )).ToList();
 
         // 4. Tạo Order aggregate root
@@ -88,15 +91,17 @@ public class CreateOrderFromBasketCommandHandler(
         }
 
         var order = Order.Create(
-            req.CustomerId,
+            req.UserId,
             req.SessionId,
             req.FulfillmentType,
             customerInfo,
             shippingAddress,
             shippingMethodCode,
+            shippingMethodName,
             shippingFee,
             shippingFeeNote,
             paymentMethod.Code,
+            paymentMethod.Name,
             orderItems,
             req.Note
         );

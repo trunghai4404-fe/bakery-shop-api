@@ -24,17 +24,24 @@ namespace Ordering.Infrastructure.Migrations
 
             modelBuilder.Entity("Ordering.Domain.Entities.Order", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CancelReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
-
-                    b.Property<long?>("CustomerId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("CustomerInfo")
                         .IsRequired()
@@ -69,6 +76,13 @@ namespace Ordering.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("PaymentMethodName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasDefaultValue("Thanh toán khi nhận hàng (COD)");
+
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("integer");
 
@@ -91,6 +105,10 @@ namespace Ordering.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("ShippingMethodName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -102,14 +120,17 @@ namespace Ordering.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("OrderCode")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders", (string)null);
                 });
@@ -146,8 +167,8 @@ namespace Ordering.Infrastructure.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -155,6 +176,10 @@ namespace Ordering.Infrastructure.Migrations
 
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("ProductImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()

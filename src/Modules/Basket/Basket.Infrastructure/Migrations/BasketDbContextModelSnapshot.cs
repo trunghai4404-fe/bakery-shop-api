@@ -33,9 +33,6 @@ namespace Basket.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
-                    b.Property<long?>("CustomerId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("CustomerInfo")
                         .IsRequired()
                         .HasColumnType("jsonb");
@@ -83,17 +80,18 @@ namespace Basket.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId")
-                        .IsUnique()
-                        .HasFilter("\"CustomerId\" IS NOT NULL AND \"IsActive\" = true");
-
-                    b.HasIndex("ExpiresAt");
 
                     b.HasIndex("SessionId")
                         .IsUnique()
                         .HasFilter("\"SessionId\" IS NOT NULL AND \"IsActive\" = true");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("\"UserId\" IS NOT NULL AND \"IsActive\" = true");
 
                     b.ToTable("Baskets", (string)null);
                 });

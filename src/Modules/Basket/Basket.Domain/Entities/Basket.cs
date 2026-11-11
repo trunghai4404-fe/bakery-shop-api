@@ -6,7 +6,7 @@ namespace Basket.Domain.Entities;
 
 public class Basket : AuditableEntity<Guid>
 {
-    public long? CustomerId { get; private set; }
+    public Guid? UserId { get; private set; }
     public string? SessionId { get; private set; }
     public FulfillmentType FulfillmentType { get; private set; } = FulfillmentType.Pickup;
     public CustomerInfo CustomerInfo { get; private set; } = CustomerInfo.Empty;
@@ -24,13 +24,13 @@ public class Basket : AuditableEntity<Guid>
     private Basket() { }
 
     // Factory method tạo giỏ hàng mới
-    public static Basket Create(long? customerId, string? sessionId, int expiryDays = 30)
+    public static Basket Create(Guid? userId, string? sessionId, int expiryDays = 30)
     {
         return new Basket
         {
             Id = Guid.NewGuid(),
-            CustomerId = customerId,
-            SessionId = customerId.HasValue ? null : sessionId,
+            UserId = userId,
+            SessionId = userId.HasValue ? null : sessionId,
             FulfillmentType = FulfillmentType.Pickup,
             CustomerInfo = CustomerInfo.Empty,
             PaymentMethod = "COD",
@@ -68,10 +68,10 @@ public class Basket : AuditableEntity<Guid>
         LastModifiedAt = DateTime.UtcNow;
     }
 
-    // Nghiệp vụ: Gán CustomerId khi khách đăng nhập (Merge giỏ hàng)
-    public void AssignToCustomer(long customerId)
+    // Nghiệp vụ: Gán UserId khi người dùng đăng nhập (Merge giỏ hàng)
+    public void AssignToUser(Guid userId)
     {
-        CustomerId = customerId;
+        UserId = userId;
         SessionId = null;
         LastModifiedAt = DateTime.UtcNow;
     }

@@ -12,14 +12,23 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
     {
         get
         {
-            var userIdClaims = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User?.FindFirst("sub")?.Value;
+            var userIdClaims = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? User?.FindFirst("sub")?.Value
+                ?? User?.FindFirst("userId")?.Value;
+
             return Guid.TryParse(userIdClaims, out var userId) ? userId : null;
         }
     }
 
     public string? UserName => User?.FindFirst(ClaimTypes.Name)?.Value;
     public bool IsAuthenticated => User?.Identity?.IsAuthenticated ?? false;
-    public bool IsAdmin => User?.IsInRole("Admin") ?? false;
+
+    public bool IsAdmin =>
+        (User?.IsInRole("ADMIN") ?? false) ||
+        (User?.IsInRole("Admin") ?? false) ||
+        (User?.Claims.Any(c => (c.Type == ClaimTypes.Role || c.Type == "role") && c.Value.Equals("ADMIN", StringComparison.OrdinalIgnoreCase)) ?? false) ||
+        HasPermission("Order.View");
+
     public bool HasPermission(string permission)
     {
         if (string.IsNullOrWhiteSpace(permission) || !IsAuthenticated)

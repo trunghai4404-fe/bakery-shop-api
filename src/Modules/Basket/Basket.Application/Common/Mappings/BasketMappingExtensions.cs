@@ -31,7 +31,8 @@ public static class BasketMappingExtensions
                 i.FinalPrice,
                 i.Promotion,
                 i.Gifts,
-                warnings
+                warnings,
+                i.ImageUrl
             );
         }).ToList();
 
@@ -39,7 +40,7 @@ public static class BasketMappingExtensions
 
         return new BasketDto(
             basket.Id,
-            basket.CustomerId,
+            basket.UserId,
             basket.SessionId,
             basket.FulfillmentType.ToString(),
             new CustomerInfoDto(

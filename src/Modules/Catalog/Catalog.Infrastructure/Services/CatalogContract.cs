@@ -15,6 +15,7 @@ public class CatalogContract(CatalogDbContext dbContext) : ICatalogContract
         return await dbContext.ProductVariants
             .AsNoTracking()
             .Include(v => v.Product)
+                .ThenInclude(p => p.ProductImages)
             .Where(v => ids.Contains(v.Id))
             .Select(v => new CatalogVariantValidationDto(
                 v.Id,
@@ -24,7 +25,12 @@ public class CatalogContract(CatalogDbContext dbContext) : ICatalogContract
                 v.Sku,
                 v.Price,
                 v.StockQuantity,
-                v.IsActive && v.Product.IsActive
+                v.IsActive && v.Product.IsActive,
+                v.Product.ProductImages
+                    .OrderByDescending(img => img.IsPrimary)
+                    .ThenBy(img => img.SortOrder)
+                    .Select(img => img.DesktopUrl)
+                    .FirstOrDefault()
             ))
             .ToListAsync(ct);
     }

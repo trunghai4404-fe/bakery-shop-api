@@ -14,15 +14,15 @@ namespace Api.Controllers.v1;
 public class BasketController(ISender sender) : ApiControllerBase
 {
     /// <summary>
-    /// Khởi tạo hoặc lấy giỏ hàng đang active của Customer / Session
+    /// Khởi tạo hoặc lấy giỏ hàng đang active của User / Session
     /// </summary>
     [HttpPost]
     public async Task<IActionResult> CreateBasket([FromBody] CreateBasketRequest request, CancellationToken ct)
     {
         var sessionId = GetSessionId();
-        long? customerId = GetCustomerId();
+        Guid? userId = GetUserId();
 
-        var command = new CreateBasketCommand(customerId, sessionId, request);
+        var command = new CreateBasketCommand(userId, sessionId, request);
         var result = await sender.Send(command, ct);
         return HandleResult(result, "Tạo hoặc lấy giỏ hàng thành công.");
     }
@@ -77,15 +77,5 @@ public class BasketController(ISender sender) : ApiControllerBase
     private string? GetSessionId()
     {
         return Request.Headers["X-Session-Id"].FirstOrDefault();
-    }
-
-    private long? GetCustomerId()
-    {
-        var claim = User.Claims.FirstOrDefault(c => c.Type == "sub" || c.Type == "customerId" || c.Type == "nameid");
-        if (claim != null && long.TryParse(claim.Value, out var id))
-        {
-            return id;
-        }
-        return null;
     }
 }

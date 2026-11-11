@@ -1,3 +1,4 @@
+using SharedKernel.Abstractions;
 using SharedKernel.Domain.Errors;
 
 namespace Shared.Web;
@@ -13,11 +14,27 @@ using Microsoft.Extensions.DependencyInjection;
 public abstract class ApiControllerBase : ControllerBase
 {
     private ISender? _sender;
+    private ICurrentUserService? _currentUserService;
 
     /// <summary>
     /// ISender MediatR được tự động Inject từ HttpContext ServiceProvider
     /// </summary>
     protected ISender Sender => _sender ??= HttpContext.RequestServices.GetRequiredService<ISender>();
+
+    /// <summary>
+    /// ICurrentUserService được tự động Inject từ HttpContext ServiceProvider
+    /// </summary>
+    protected ICurrentUserService CurrentUser => _currentUserService ??= HttpContext.RequestServices.GetRequiredService<ICurrentUserService>();
+
+    /// <summary>
+    /// Lấy UserId của người dùng hiện tại thông qua CurrentUserService (Guid?)
+    /// </summary>
+    protected Guid? GetUserId() => CurrentUser.UserId;
+
+    /// <summary>
+    /// Kiểm tra người dùng hiện tại có vai trò Admin hoặc quyền liên quan
+    /// </summary>
+    protected bool IsAdminUser() => CurrentUser.IsAdmin;
 
     /// <summary>
     /// Xử lý Result có dữ liệu trả về (Result<T>)

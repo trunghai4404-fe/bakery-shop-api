@@ -18,11 +18,13 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.ToTable("Orders");
 
         builder.HasKey(o => o.Id);
-        builder.Property(o => o.Id).ValueGeneratedNever();
+        builder.Property(o => o.Id).UseIdentityByDefaultColumn();
 
         builder.Property(o => o.OrderCode)
             .IsRequired()
             .HasMaxLength(50);
+
+        builder.Property(o => o.UserId);
 
         builder.Property(o => o.SessionId)
             .HasMaxLength(100);
@@ -34,6 +36,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.ShippingMethodCode)
             .HasMaxLength(50);
 
+        builder.Property(o => o.ShippingMethodName)
+            .HasMaxLength(100);
+
         builder.Property(o => o.ShippingFee)
             .HasPrecision(18, 2);
 
@@ -43,6 +48,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.PaymentMethodCode)
             .IsRequired()
             .HasMaxLength(50);
+
+        builder.Property(o => o.PaymentMethodName)
+            .IsRequired()
+            .HasMaxLength(100)
+            .HasDefaultValue("Thanh toán khi nhận hàng (COD)");
 
         builder.Property(o => o.PaymentStatus)
             .IsRequired();
@@ -61,6 +71,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(o => o.Note)
             .HasMaxLength(1000);
+
+        builder.Property(o => o.CancelReason)
+            .HasMaxLength(500);
 
         // Lưu CustomerInfo dạng JSONB
         builder.Property(o => o.CustomerInfo)
@@ -82,7 +95,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(o => o.OrderCode).IsUnique();
-        builder.HasIndex(o => o.CustomerId);
+        builder.HasIndex(o => o.UserId);
         builder.HasIndex(o => o.CreatedAt);
     }
 }

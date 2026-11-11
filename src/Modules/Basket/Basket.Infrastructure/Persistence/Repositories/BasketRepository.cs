@@ -12,10 +12,10 @@ public class BasketRepository(BasketDbContext dbContext) : IBasketRepository
             .FirstOrDefaultAsync(b => b.Id == id && b.IsActive, ct);
     }
 
-    public async Task<BasketEntity?> GetActiveByCustomerIdAsync(long customerId, CancellationToken ct = default)
+    public async Task<BasketEntity?> GetActiveByUserIdAsync(Guid userId, CancellationToken ct = default)
     {
         return await dbContext.Baskets
-            .FirstOrDefaultAsync(b => b.CustomerId == customerId && b.IsActive, ct);
+            .FirstOrDefaultAsync(b => b.UserId == userId && b.IsActive, ct);
     }
 
     public async Task<BasketEntity?> GetActiveBySessionIdAsync(string sessionId, CancellationToken ct = default)

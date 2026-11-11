@@ -46,11 +46,12 @@ public record CreateOrderItemRequest(
     decimal Price,
     decimal DiscountPrice,
     decimal DiscountPercent,
-    decimal FinalPrice
+    decimal FinalPrice,
+    string? ProductImageUrl = null
 );
 
 public record CreateOrderFromBasketRequest(
-    long? CustomerId,
+    Guid? UserId,
     string? SessionId,
     string FulfillmentType,
     OrderCustomerInfoDto CustomerInfo,
@@ -62,7 +63,7 @@ public record CreateOrderFromBasketRequest(
 );
 
 public record CreateOrderResultDto(
-    Guid OrderId,
+    long OrderId,
     string OrderCode,
     decimal TotalAmount,
     string Status,
@@ -75,6 +76,7 @@ public record OrderItemDto(
     string ProductName,
     long VariantId,
     string VariantName,
+    string? ProductImageUrl,
     int Quantity,
     decimal Price,
     decimal DiscountPrice,
@@ -84,23 +86,130 @@ public record OrderItemDto(
 );
 
 public record OrderDto(
-    Guid Id,
+    long Id,
     string OrderCode,
-    long? CustomerId,
+    Guid? UserId,
     string? SessionId,
     string FulfillmentType,
     OrderCustomerInfoDto CustomerInfo,
     OrderShippingAddressDto? ShippingAddress,
     string? ShippingMethodCode,
+    string? ShippingMethodName,
     decimal ShippingFee,
     string? ShippingFeeNote,
     string PaymentMethodCode,
+    string PaymentMethodName,
     string PaymentStatus,
     string Status,
     decimal Subtotal,
     decimal DiscountAmount,
     decimal TotalAmount,
     string? Note,
+    string? CancelReason,
+    DateTime? CancelledAt,
     DateTime CreatedAt,
     List<OrderItemDto> Items
+);
+
+// DTOs dành cho User
+public record UserOrderItemSummaryDto(
+    long ProductId,
+    string ProductName,
+    long VariantId,
+    string VariantName,
+    string? ProductImageUrl,
+    int Quantity,
+    decimal FinalPrice,
+    decimal TotalItemPrice
+);
+
+public record UserOrderSummaryDto(
+    string OrderCode,
+    DateTime CreatedAt,
+    string Status,
+    string PaymentStatus,
+    string PaymentMethodCode,
+    string PaymentMethodName,
+    string? ShippingMethodCode,
+    string? ShippingMethodName,
+    string FulfillmentType,
+    decimal TotalAmount,
+    int TotalItems,
+    List<UserOrderItemSummaryDto> Items
+);
+
+public record OrderSummaryDto(
+    int All,
+    int Pending,
+    int Confirmed,
+    int Preparing,
+    int ReadyForPickup,
+    int Shipping,
+    int Completed,
+    int Cancelled
+);
+
+// Backward-compatible alias for user summary count
+public record UserOrderSummaryCountDto(
+    int All,
+    int Pending,
+    int Confirmed,
+    int Preparing,
+    int ReadyForPickup,
+    int Shipping,
+    int Completed,
+    int Cancelled
+);
+
+public record CancelOrderRequest(
+    string Reason
+);
+
+public record PublicLookupOrderRequest(
+    string OrderCode,
+    string PhoneNumber
+);
+
+public record PublicOrderLookupDto(
+    string OrderCode,
+    string Status,
+    string PaymentStatus,
+    string PaymentMethodCode,
+    string PaymentMethodName,
+    string? ShippingMethodCode,
+    string? ShippingMethodName,
+    string FulfillmentType,
+    string MaskedCustomerName,
+    string MaskedPhoneNumber,
+    string? MaskedAddress,
+    decimal Subtotal,
+    decimal ShippingFee,
+    decimal TotalAmount,
+    string? Note,
+    string? CancelReason,
+    DateTime CreatedAt,
+    List<OrderItemDto> Items
+);
+
+// DTOs dành cho Admin (CMS)
+public record AdminUpdateOrderStatusRequest(
+    string Status,
+    string? CancelReason = null
+);
+
+public record AdminUpdateOrderPaymentStatusRequest(
+    string PaymentStatus
+);
+
+public record AdminOrderStatisticsDto(
+    int TotalOrders,
+    int PendingCount,
+    int ConfirmedCount,
+    int PreparingCount,
+    int ReadyForPickupCount,
+    int ShippingCount,
+    int CompletedCount,
+    int CancelledCount,
+    decimal TodayRevenue,
+    decimal MonthRevenue
 );

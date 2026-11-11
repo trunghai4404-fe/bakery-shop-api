@@ -16,7 +16,8 @@ namespace Ordering.Infrastructure.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     OrderCode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     CustomerId = table.Column<long>(type: "bigint", nullable: true),
                     SessionId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -33,6 +34,8 @@ namespace Ordering.Infrastructure.Migrations
                     DiscountAmount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     TotalAmount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     Note = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    CancelReason = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    CancelledAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     LastModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -92,7 +95,7 @@ namespace Ordering.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<long>(type: "bigint", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
                     ProductName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     VariantId = table.Column<long>(type: "bigint", nullable: false),

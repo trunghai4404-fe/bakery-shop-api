@@ -31,12 +31,13 @@ public record BasketItemDto(
     decimal FinalPrice,
     Dictionary<string, object>? Promotion,
     List<object>? Gifts,
-    List<BasketItemWarningDto>? Warnings = null
+    List<BasketItemWarningDto>? Warnings = null,
+    string? ImageUrl = null
 );
 
 public record BasketDto(
     Guid Id,
-    long? CustomerId,
+    Guid? UserId,
     string? SessionId,
     string FulfillmentType,
     CustomerInfoDto CustomerInfo,

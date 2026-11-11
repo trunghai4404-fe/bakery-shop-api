@@ -20,7 +20,7 @@ public class BasketConfiguration : IEntityTypeConfiguration<Basket.Domain.Entiti
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedNever();
 
-        builder.Property(b => b.CustomerId);
+        builder.Property(b => b.UserId);
 
         builder.Property(b => b.SessionId)
             .HasMaxLength(100);
@@ -70,17 +70,14 @@ public class BasketConfiguration : IEntityTypeConfiguration<Basket.Domain.Entiti
                 v => JsonSerializer.Serialize(v, JsonOptions),
                 v => JsonSerializer.Deserialize<List<BasketItem>>(v, JsonOptions) ?? new List<BasketItem>());
 
-        // Partial Unique Index: 1 Customer chỉ có tối đa 1 Active Basket
-        builder.HasIndex(b => b.CustomerId)
+        // Partial Unique Index: 1 User chỉ có tối đa 1 Active Basket
+        builder.HasIndex(b => b.UserId)
             .IsUnique()
-            .HasFilter("\"CustomerId\" IS NOT NULL AND \"IsActive\" = true");
+            .HasFilter("\"UserId\" IS NOT NULL AND \"IsActive\" = true");
 
         // Partial Unique Index: 1 Session chỉ có tối đa 1 Active Basket
         builder.HasIndex(b => b.SessionId)
             .IsUnique()
             .HasFilter("\"SessionId\" IS NOT NULL AND \"IsActive\" = true");
-
-        // Index phục vụ background job dọn dẹp giỏ hàng hết hạn
-        builder.HasIndex(b => b.ExpiresAt);
     }
 }

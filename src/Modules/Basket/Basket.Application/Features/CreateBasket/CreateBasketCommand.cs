@@ -14,7 +14,7 @@ using BasketEntity = Basket.Domain.Entities.Basket;
 namespace Basket.Application.Features.CreateBasket;
 
 public record CreateBasketCommand(
-    long? CustomerId,
+    Guid? UserId,
     string? SessionId,
     CreateBasketRequest Request
 ) : IRequest<Result<BasketDto>>;
@@ -40,11 +40,11 @@ public class CreateBasketCommandHandler(
 {
     public async Task<Result<BasketDto>> Handle(CreateBasketCommand command, CancellationToken ct)
     {
-        // 1. Kiểm tra xem Customer hoặc Session này đã có Active Basket chưa
+        // 1. Kiểm tra xem User hoặc Session này đã có Active Basket chưa
         BasketEntity? existingBasket = null;
-        if (command.CustomerId.HasValue)
+        if (command.UserId.HasValue)
         {
-            existingBasket = await basketRepository.GetActiveByCustomerIdAsync(command.CustomerId.Value, ct);
+            existingBasket = await basketRepository.GetActiveByUserIdAsync(command.UserId.Value, ct);
         }
         else if (!string.IsNullOrWhiteSpace(command.SessionId))
         {
@@ -52,7 +52,7 @@ public class CreateBasketCommandHandler(
         }
 
         // 2. Nếu đã có Active Basket, tái sử dụng giỏ này
-        var basket = existingBasket ?? BasketEntity.Create(command.CustomerId, command.SessionId);
+        var basket = existingBasket ?? BasketEntity.Create(command.UserId, command.SessionId);
 
         // 3. Nếu request có items gửi kèm
         if (command.Request.Items != null && command.Request.Items.Count > 0)
@@ -94,7 +94,10 @@ public class CreateBasketCommandHandler(
                     price,
                     discountPrice,
                     discountPercent,
-                    finalPrice
+                    finalPrice,
+                    Promotion: null,
+                    Gifts: null,
+                    ImageUrl: catalogVar.ImageUrl
                 ));
             }
 

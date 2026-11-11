@@ -34,7 +34,7 @@ public static class OrderingDataSeeder
             await context.ShippingMethods.AddAsync(new ShippingMethod(
                 1,
                 "INTERNAL",
-                "Giao hàng nội bộ (Tiệm tự giao)",
+                "Giao hàng nội bộ",
                 0,
                 "Phí ship sẽ được tính khi giao hàng",
                 "30-60 phút",

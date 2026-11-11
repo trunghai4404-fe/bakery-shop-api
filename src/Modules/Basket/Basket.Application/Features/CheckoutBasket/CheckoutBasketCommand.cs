@@ -65,7 +65,8 @@ public class CheckoutBasketCommandHandler(
             i.Price,
             i.DiscountPrice,
             i.DiscountPercent,
-            i.FinalPrice
+            i.FinalPrice,
+            i.ImageUrl
         )).ToList();
 
         var customerInfo = new OrderCustomerInfoDto(
@@ -87,7 +88,7 @@ public class CheckoutBasketCommandHandler(
         }
 
         var createOrderRequest = new CreateOrderFromBasketRequest(
-            basket.CustomerId,
+            basket.UserId,
             basket.SessionId,
             basket.FulfillmentType.ToString(),
             customerInfo,
