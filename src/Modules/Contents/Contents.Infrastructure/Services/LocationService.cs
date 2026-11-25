@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text;
+using System.Text.Json;
 using Contents.Contracts.DTOs.Locations;
 using Contents.Contracts.Interfaces;
 using Contents.Domain.Entities;
@@ -24,9 +26,10 @@ public class LocationService(
     private readonly TimeSpan _cacheDuration = TimeSpan.FromDays(
         configuration.GetValue<int>("ProvincesApi:CacheDurationDays", 30));
 
-    public async Task<List<ProvinceDto>> GetProvincesAsync(CancellationToken ct = default)
+    public async Task<List<ProvinceDto>> GetProvincesAsync(string? keyword = null, CancellationToken ct = default)
     {
         const string cacheKey = "locations:provinces";
+        List<ProvinceDto>? dtos = null;
 
         try
         {
@@ -36,7 +39,7 @@ public class LocationService(
                 var cachedProvinces = JsonSerializer.Deserialize<List<ProvinceDto>>(cached, JsonOptions);
                 if (cachedProvinces != null && cachedProvinces.Count > 0)
                 {
-                    return cachedProvinces;
+                    dtos = cachedProvinces;
                 }
             }
         }
@@ -45,44 +48,54 @@ public class LocationService(
             logger.LogWarning(ex, "Failed to read provinces from Redis cache. Falling back to DB.");
         }
 
-        var provinces = await locationRepository.GetProvincesAsync(ct);
-
-        if (provinces.Count == 0)
+        if (dtos == null)
         {
-            logger.LogInformation("Database chưa có dữ liệu địa giới hành chính. Bắt đầu tự động đồng bộ...");
-            await SyncLocationsFromOpenApiAsync(ct);
-            provinces = await locationRepository.GetProvincesAsync(ct);
-        }
+            var provinces = await locationRepository.GetProvincesAsync(ct: ct);
 
-        var dtos = provinces.Select(p => new ProvinceDto(
-            p.Id,
-            p.Name,
-            p.FullName,
-            p.DivisionType,
-            p.Codename,
-            p.PhoneCode
-        )).ToList();
-
-        try
-        {
-            await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(dtos, JsonOptions), new DistributedCacheEntryOptions
+            if (provinces.Count == 0)
             {
-                AbsoluteExpirationRelativeToNow = _cacheDuration
-            }, ct);
+                logger.LogInformation("Database chưa có dữ liệu địa giới hành chính. Bắt đầu tự động đồng bộ...");
+                await SyncLocationsFromOpenApiAsync(ct);
+                provinces = await locationRepository.GetProvincesAsync(ct: ct);
+            }
+
+            dtos = provinces.Select(p => new ProvinceDto(
+                p.Id,
+                p.Name,
+                p.FullName,
+                p.DivisionType,
+                p.Codename,
+                p.PhoneCode
+            )).ToList();
+
+            try
+            {
+                await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(dtos, JsonOptions), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = _cacheDuration
+                }, ct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to save provinces to Redis cache.");
+            }
         }
-        catch (Exception ex)
+
+        if (!string.IsNullOrWhiteSpace(keyword))
         {
-            logger.LogWarning(ex, "Failed to save provinces to Redis cache.");
+            return dtos.Where(p => MatchesKeyword(p.Name, p.FullName, p.Codename, keyword)).ToList();
         }
 
         return dtos;
     }
 
-    public async Task<List<DistrictDto>> GetDistrictsAsync(int? provinceId = null, CancellationToken ct = default)
+    public async Task<List<DistrictDto>> GetDistrictsAsync(int? provinceId = null, string? keyword = null, CancellationToken ct = default)
     {
         var cacheKey = provinceId.HasValue 
             ? $"locations:districts:{provinceId.Value}" 
             : "locations:districts:all";
+
+        List<DistrictDto>? dtos = null;
 
         try
         {
@@ -92,7 +105,7 @@ public class LocationService(
                 var cachedDistricts = JsonSerializer.Deserialize<List<DistrictDto>>(cached, JsonOptions);
                 if (cachedDistricts != null)
                 {
-                    return cachedDistricts;
+                    dtos = cachedDistricts;
                 }
             }
         }
@@ -101,36 +114,46 @@ public class LocationService(
             logger.LogWarning(ex, "Failed to read districts from Redis cache (key: {CacheKey}). Falling back to DB.", cacheKey);
         }
 
-        var districts = await locationRepository.GetDistrictsAsync(provinceId, ct);
-        var dtos = districts.Select(d => new DistrictDto(
-            d.Id,
-            d.ProvinceId,
-            d.Name,
-            d.FullName,
-            d.DivisionType,
-            d.Codename
-        )).ToList();
+        if (dtos == null)
+        {
+            var districts = await locationRepository.GetDistrictsAsync(provinceId, ct: ct);
+            dtos = districts.Select(d => new DistrictDto(
+                d.Id,
+                d.ProvinceId,
+                d.Name,
+                d.FullName,
+                d.DivisionType,
+                d.Codename
+            )).ToList();
 
-        try
-        {
-            await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(dtos, JsonOptions), new DistributedCacheEntryOptions
+            try
             {
-                AbsoluteExpirationRelativeToNow = _cacheDuration
-            }, ct);
+                await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(dtos, JsonOptions), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = _cacheDuration
+                }, ct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to save districts to Redis cache (key: {CacheKey}).", cacheKey);
+            }
         }
-        catch (Exception ex)
+
+        if (!string.IsNullOrWhiteSpace(keyword))
         {
-            logger.LogWarning(ex, "Failed to save districts to Redis cache (key: {CacheKey}).", cacheKey);
+            return dtos.Where(d => MatchesKeyword(d.Name, d.FullName, d.Codename, keyword)).ToList();
         }
 
         return dtos;
     }
 
-    public async Task<List<WardDto>> GetWardsAsync(int? districtId = null, int? provinceId = null, CancellationToken ct = default)
+    public async Task<List<WardDto>> GetWardsAsync(int? districtId = null, int? provinceId = null, string? keyword = null, CancellationToken ct = default)
     {
         var cacheKey = districtId.HasValue 
             ? $"locations:wards:district:{districtId.Value}" 
             : (provinceId.HasValue ? $"locations:wards:province:{provinceId.Value}" : "locations:wards:all");
+
+        List<WardDto>? dtos = null;
 
         try
         {
@@ -140,7 +163,7 @@ public class LocationService(
                 var cachedWards = JsonSerializer.Deserialize<List<WardDto>>(cached, JsonOptions);
                 if (cachedWards != null)
                 {
-                    return cachedWards;
+                    dtos = cachedWards;
                 }
             }
         }
@@ -149,26 +172,34 @@ public class LocationService(
             logger.LogWarning(ex, "Failed to read wards from Redis cache (key: {CacheKey}). Falling back to DB.", cacheKey);
         }
 
-        var wards = await locationRepository.GetWardsAsync(districtId, provinceId, ct);
-        var dtos = wards.Select(w => new WardDto(
-            w.Id,
-            w.DistrictId,
-            w.Name,
-            w.FullName,
-            w.DivisionType,
-            w.Codename
-        )).ToList();
+        if (dtos == null)
+        {
+            var wards = await locationRepository.GetWardsAsync(districtId, provinceId, ct: ct);
+            dtos = wards.Select(w => new WardDto(
+                w.Id,
+                w.DistrictId,
+                w.Name,
+                w.FullName,
+                w.DivisionType,
+                w.Codename
+            )).ToList();
 
-        try
-        {
-            await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(dtos, JsonOptions), new DistributedCacheEntryOptions
+            try
             {
-                AbsoluteExpirationRelativeToNow = _cacheDuration
-            }, ct);
+                await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(dtos, JsonOptions), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = _cacheDuration
+                }, ct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to save wards to Redis cache (key: {CacheKey}).", cacheKey);
+            }
         }
-        catch (Exception ex)
+
+        if (!string.IsNullOrWhiteSpace(keyword))
         {
-            logger.LogWarning(ex, "Failed to save wards to Redis cache (key: {CacheKey}).", cacheKey);
+            return dtos.Where(w => MatchesKeyword(w.Name, w.FullName, w.Codename, keyword)).ToList();
         }
 
         return dtos;
@@ -268,5 +299,44 @@ public class LocationService(
         }
 
         return provinces.Count;
+    }
+
+    private static bool MatchesKeyword(string name, string fullName, string codename, string keyword)
+    {
+        if (string.IsNullOrWhiteSpace(keyword)) return true;
+        var kw = keyword.Trim();
+        var kwNormalized = RemoveDiacritics(kw);
+
+        if (name.Contains(kw, StringComparison.OrdinalIgnoreCase) ||
+            fullName.Contains(kw, StringComparison.OrdinalIgnoreCase) ||
+            codename.Contains(kw, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var nameNormalized = RemoveDiacritics(name);
+        var fullNameNormalized = RemoveDiacritics(fullName);
+
+        return nameNormalized.Contains(kwNormalized, StringComparison.OrdinalIgnoreCase) ||
+               fullNameNormalized.Contains(kwNormalized, StringComparison.OrdinalIgnoreCase) ||
+               codename.Replace('_', ' ').Contains(kwNormalized, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string RemoveDiacritics(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return text;
+        var normalizedString = text.Normalize(NormalizationForm.FormD);
+        var stringBuilder = new StringBuilder(normalizedString.Length);
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+
+        return stringBuilder.ToString().Normalize(NormalizationForm.FormC).Replace('đ', 'd').Replace('Đ', 'D');
     }
 }

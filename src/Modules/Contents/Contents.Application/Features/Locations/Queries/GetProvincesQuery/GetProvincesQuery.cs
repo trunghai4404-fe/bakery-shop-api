@@ -5,7 +5,7 @@ using SharedKernel.Domain;
 
 namespace Contents.Application.Features.Locations.Queries.GetProvincesQuery;
 
-public record GetProvincesQuery : IRequest<Result<List<ProvinceDto>>>;
+public record GetProvincesQuery(string? Keyword = null) : IRequest<Result<List<ProvinceDto>>>;
 
 public class GetProvincesQueryHandler(
     ILocationService locationService
@@ -15,7 +15,7 @@ public class GetProvincesQueryHandler(
         GetProvincesQuery request, 
         CancellationToken ct)
     {
-        var provinces = await locationService.GetProvincesAsync(ct);
+        var provinces = await locationService.GetProvincesAsync(request.Keyword, ct);
         return Result.Success(provinces);
     }
 }

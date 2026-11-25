@@ -6,17 +6,28 @@ namespace Contents.Infrastructure.Persistence.Repositories;
 
 public class LocationRepository(ContentsDbContext dbContext) : ILocationRepository
 {
-    public async Task<List<Province>> GetProvincesAsync(CancellationToken ct = default)
+    public async Task<List<Province>> GetProvincesAsync(string? keyword = null, CancellationToken ct = default)
     {
-        return await dbContext.Provinces
+        var query = dbContext.Provinces
             .AsNoTracking()
-            .Where(p => p.IsActive)
+            .Where(p => p.IsActive);
+
+        if (!string.IsNullOrWhiteSpace(keyword))
+        {
+            var kw = keyword.Trim();
+            query = query.Where(p =>
+                EF.Functions.ILike(p.Name, $"%{kw}%") ||
+                EF.Functions.ILike(p.FullName, $"%{kw}%") ||
+                EF.Functions.ILike(p.Codename, $"%{kw}%"));
+        }
+
+        return await query
             .OrderBy(p => p.SortOrder)
             .ThenBy(p => p.Id)
             .ToListAsync(ct);
     }
 
-    public async Task<List<District>> GetDistrictsAsync(int? provinceId = null, CancellationToken ct = default)
+    public async Task<List<District>> GetDistrictsAsync(int? provinceId = null, string? keyword = null, CancellationToken ct = default)
     {
         var query = dbContext.Districts
             .AsNoTracking()
@@ -27,13 +38,22 @@ public class LocationRepository(ContentsDbContext dbContext) : ILocationReposito
             query = query.Where(d => d.ProvinceId == provinceId.Value);
         }
 
+        if (!string.IsNullOrWhiteSpace(keyword))
+        {
+            var kw = keyword.Trim();
+            query = query.Where(d =>
+                EF.Functions.ILike(d.Name, $"%{kw}%") ||
+                EF.Functions.ILike(d.FullName, $"%{kw}%") ||
+                EF.Functions.ILike(d.Codename, $"%{kw}%"));
+        }
+
         return await query
             .OrderBy(d => d.SortOrder)
             .ThenBy(d => d.Id)
             .ToListAsync(ct);
     }
 
-    public async Task<List<Ward>> GetWardsAsync(int? districtId = null, int? provinceId = null, CancellationToken ct = default)
+    public async Task<List<Ward>> GetWardsAsync(int? districtId = null, int? provinceId = null, string? keyword = null, CancellationToken ct = default)
     {
         var query = dbContext.Wards
             .AsNoTracking()
@@ -46,6 +66,15 @@ public class LocationRepository(ContentsDbContext dbContext) : ILocationReposito
         else if (provinceId.HasValue)
         {
             query = query.Where(w => w.District.ProvinceId == provinceId.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(keyword))
+        {
+            var kw = keyword.Trim();
+            query = query.Where(w =>
+                EF.Functions.ILike(w.Name, $"%{kw}%") ||
+                EF.Functions.ILike(w.FullName, $"%{kw}%") ||
+                EF.Functions.ILike(w.Codename, $"%{kw}%"));
         }
 
         return await query

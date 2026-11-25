@@ -5,7 +5,7 @@ using SharedKernel.Domain;
 
 namespace Contents.Application.Features.Locations.Queries.GetWardsByDistrictQuery;
 
-public record GetWardsByDistrictQuery(int? DistrictId = null, int? ProvinceId = null) : IRequest<Result<List<WardDto>>>;
+public record GetWardsByDistrictQuery(int? DistrictId = null, int? ProvinceId = null, string? Keyword = null) : IRequest<Result<List<WardDto>>>;
 
 public class GetWardsByDistrictQueryHandler(
     ILocationService locationService
@@ -15,7 +15,7 @@ public class GetWardsByDistrictQueryHandler(
         GetWardsByDistrictQuery request, 
         CancellationToken ct)
     {
-        var wards = await locationService.GetWardsAsync(request.DistrictId, request.ProvinceId, ct);
+        var wards = await locationService.GetWardsAsync(request.DistrictId, request.ProvinceId, request.Keyword, ct);
         return Result.Success(wards);
     }
 }
