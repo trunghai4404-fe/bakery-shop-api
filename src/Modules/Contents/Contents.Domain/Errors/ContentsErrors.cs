@@ -5,6 +5,9 @@ namespace Contents.Domain.Errors;
 
 public static class ContentsErrors
 {
+    public static readonly Error StoreNotFound =
+        Error.NotFound(ErrorCode.StoreNotFound, ErrorMessage.StoreNotFound);
+
     public static readonly Error BannerNotFound = Error.NotFound(
         code: ErrorCode.BannerNotFound,
         description: ErrorMessage.BannerNotFound

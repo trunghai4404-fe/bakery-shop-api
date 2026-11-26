@@ -80,6 +80,9 @@ namespace Basket.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<long?>("StoreId")
+                        .HasColumnType("bigint");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 

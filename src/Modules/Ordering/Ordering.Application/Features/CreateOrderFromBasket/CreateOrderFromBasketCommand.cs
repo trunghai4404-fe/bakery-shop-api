@@ -23,6 +23,11 @@ public class CreateOrderFromBasketCommandHandler(
     {
         var req = command.Request;
 
+        if (req.Store == null || req.Store.Id <= 0)
+        {
+            return Result.Failure<CreateOrderResultDto>(OrderingErrors.StoreIdRequired);
+        }
+
         if (req.Items == null || req.Items.Count == 0)
         {
             return Result.Failure<CreateOrderResultDto>(OrderingErrors.EmptyOrder);
@@ -103,7 +108,19 @@ public class CreateOrderFromBasketCommandHandler(
             paymentMethod.Code,
             paymentMethod.Name,
             orderItems,
-            req.Note
+            req.Note,
+            storeInfo: new OrderStoreInfo(
+                req.Store.Id,
+                req.Store.Name,
+                req.Store.Address,
+                req.Store.ProvinceId,
+                req.Store.WardId,
+                req.Store.Latitude,
+                req.Store.Longitude,
+                req.Store.Phone,
+                req.Store.Email,
+                req.Store.OpeningHours
+            )
         );
 
         await orderRepository.AddAsync(order, ct);

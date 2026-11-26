@@ -18,6 +18,7 @@ public class Order : AuditableEntity<long>
 
     public OrderCustomerInfo CustomerInfo { get; private set; } = default!;
     public OrderShippingAddress? ShippingAddress { get; private set; }
+    public OrderStoreInfo? StoreInfo { get; private set; }
 
     public string? ShippingMethodCode { get; private set; } // "INTERNAL", "GHN"...
     public string? ShippingMethodName { get; private set; } // Label e.g. "Cửa hàng tự giao"
@@ -55,7 +56,8 @@ public class Order : AuditableEntity<long>
         string paymentMethodName,
         List<OrderItem> items,
         string? note,
-        decimal discountAmount = 0)
+        decimal discountAmount = 0,
+        OrderStoreInfo? storeInfo = null)
     {
         var orderCode = GenerateOrderCode();
         var subtotal = items.Sum(i => i.TotalItemPrice);
@@ -69,6 +71,7 @@ public class Order : AuditableEntity<long>
             FulfillmentType = fulfillmentType,
             CustomerInfo = customerInfo,
             ShippingAddress = shippingAddress,
+            StoreInfo = storeInfo,
             ShippingMethodCode = shippingMethodCode,
             ShippingMethodName = shippingMethodName,
             ShippingFee = shippingFee,

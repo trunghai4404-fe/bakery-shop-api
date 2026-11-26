@@ -40,6 +40,11 @@ public class CreateBasketCommandHandler(
 {
     public async Task<Result<BasketDto>> Handle(CreateBasketCommand command, CancellationToken ct)
     {
+        if (command.Request.StoreId is <= 0)
+        {
+            return Result.Failure<BasketDto>(BasketErrors.StoreIdRequired);
+        }
+
         // 1. Kiểm tra xem User hoặc Session này đã có Active Basket chưa
         BasketEntity? existingBasket = null;
         if (command.UserId.HasValue)
@@ -114,6 +119,11 @@ public class CreateBasketCommandHandler(
                 command.Request.PaymentMethod ?? basket.PaymentMethod,
                 command.Request.ShippingMethod ?? basket.ShippingMethod,
                 command.Request.Note ?? basket.Note);
+        }
+
+        if (command.Request.StoreId is long storeId)
+        {
+            basket.SelectStore(storeId);
         }
 
         if (existingBasket == null)

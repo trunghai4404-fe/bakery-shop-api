@@ -37,6 +37,19 @@ public record OrderShippingAddressDto(
     double? Longitude = null
 );
 
+public record OrderStoreDto(
+    long Id,
+    string Name,
+    string Address,
+    int ProvinceId,
+    int WardId,
+    double Latitude,
+    double Longitude,
+    string? Phone,
+    string? Email,
+    string? OpeningHours
+);
+
 public record CreateOrderItemRequest(
     long ProductId,
     string ProductName,
@@ -59,7 +72,8 @@ public record CreateOrderFromBasketRequest(
     string PaymentMethod,
     string? ShippingMethod,
     List<CreateOrderItemRequest> Items,
-    string? Note
+    string? Note,
+    OrderStoreDto? Store = null
 );
 
 public record CreateOrderResultDto(
@@ -108,7 +122,8 @@ public record OrderDto(
     string? CancelReason,
     DateTime? CancelledAt,
     DateTime CreatedAt,
-    List<OrderItemDto> Items
+    List<OrderItemDto> Items,
+    OrderStoreDto? Store = null
 );
 
 // DTOs dành cho User
@@ -135,7 +150,8 @@ public record UserOrderSummaryDto(
     string FulfillmentType,
     decimal TotalAmount,
     int TotalItems,
-    List<UserOrderItemSummaryDto> Items
+    List<UserOrderItemSummaryDto> Items,
+    OrderStoreDto? Store = null
 );
 
 public record OrderSummaryDto(
@@ -188,7 +204,8 @@ public record PublicOrderLookupDto(
     string? Note,
     string? CancelReason,
     DateTime CreatedAt,
-    List<OrderItemDto> Items
+    List<OrderItemDto> Items,
+    OrderStoreDto? Store = null
 );
 
 // DTOs dành cho Admin (CMS)

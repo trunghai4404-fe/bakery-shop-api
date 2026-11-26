@@ -39,12 +39,12 @@ public static class IdentityDataSeeder
                 new(PermissionEnum.Category.CategoryCreate, "Thêm danh mục", null),
                 new(PermissionEnum.Category.CategoryUpdate, "Chỉnh sửa danh mục", null),
                 new(PermissionEnum.Category.CategoryDelete, "Xóa danh mục", null),
-                
+
                 new(PermissionEnum.Role.RoleView, "Xem role", null),
                 new(PermissionEnum.Role.RoleCreate, "Thêm role", null),
                 new(PermissionEnum.Role.RoleUpdate, "Chỉnh sửa role", null),
                 new(PermissionEnum.Role.RoleDelete, "Xóa role", null),
-                
+
                 new(PermissionEnum.Permission.PermissionView, "Xem quyền", null),
                 new(PermissionEnum.Permission.PermissionUpdate, "Chỉnh sửa quyền", null),
 
@@ -52,6 +52,10 @@ public static class IdentityDataSeeder
                 new(PermissionEnum.Banner.BannerCreate, "Thêm banner", null),
                 new(PermissionEnum.Banner.BannerUpdate, "Chỉnh sửa banner", null),
                 new(PermissionEnum.Banner.BannerDelete, "Xóa banner", null),
+                new(PermissionEnum.Store.StoreView, "Xem cửa hàng", null),
+                new(PermissionEnum.Store.StoreCreate, "Thêm cửa hàng", null),
+                new(PermissionEnum.Store.StoreUpdate, "Chỉnh sửa cửa hàng", null),
+                new(PermissionEnum.Store.StoreDelete, "Xóa cửa hàng", null),
 
                 new(PermissionEnum.Order.OrderView, "Xem đơn hàng", null),
                 new(PermissionEnum.Order.OrderUpdate, "Cập nhật đơn hàng", null),
@@ -70,7 +74,7 @@ public static class IdentityDataSeeder
                 await context.SaveChangesAsync();
                 logger.LogInformation("Seed permission successfully");
             }
-            
+
             //seed role admin
             var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Code.ToUpper() == RoleEnum.Admin);
             if (adminRole == null)
@@ -80,7 +84,7 @@ public static class IdentityDataSeeder
                 await context.SaveChangesAsync();
                 logger.LogInformation("Seed role admin successfully");
             }
-            
+
             //Seed role user
             var userRole = await context.Roles.FirstOrDefaultAsync(r => r.Code.ToUpper() == RoleEnum.User);
             if (userRole == null)
@@ -90,7 +94,7 @@ public static class IdentityDataSeeder
                 await context.SaveChangesAsync();
                 logger.LogInformation("Seed role user successfully");
             }
-            
+
             var allPermissions = await context.Permissions.ToListAsync();
             var currentRolePermissionIds = await context.RolePermissions
                 .Where(rp => rp.RoleId == adminRole.Id)
@@ -109,7 +113,7 @@ public static class IdentityDataSeeder
             const string adminEmail = "admin@gmail.com";
             const string adminFullname = "Admin";
             const string password = "Admin@123";
-            
+
             var adminUser = await context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == adminEmail.ToLower());
             if (adminUser == null)
             {
@@ -124,7 +128,7 @@ public static class IdentityDataSeeder
                     var role = new UserRole(adminUser.Id, adminRole.Id);
                     await context.UserRoles.AddAsync(role);
                     await context.SaveChangesAsync();
-                    
+
                     logger.LogInformation("Seed user admin successfully");
                 }
             }

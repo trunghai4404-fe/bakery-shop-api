@@ -30,7 +30,7 @@ public static class PermissionEnum
         public const string RoleUpdate = "Role.Update";
         public const string RoleDelete = "Role.Delete";
     }
-    
+
     public static class Permission
     {
         public const string PermissionView = "Permission.View";
@@ -43,6 +43,14 @@ public static class PermissionEnum
         public const string BannerCreate = "Banner.Create";
         public const string BannerUpdate = "Banner.Update";
         public const string BannerDelete = "Banner.Delete";
+    }
+
+    public static class Store
+    {
+        public const string StoreView = "Store.View";
+        public const string StoreCreate = "Store.Create";
+        public const string StoreUpdate = "Store.Update";
+        public const string StoreDelete = "Store.Delete";
     }
 
     public static class Order

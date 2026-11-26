@@ -201,6 +201,34 @@ namespace Contents.Infrastructure.Persistence.Migrations
                     b.ToTable("Provinces", (string)null);
                 });
 
+            modelBuilder.Entity("Contents.Domain.Entities.Store", b =>
+                {
+                    b.Property<long>("Id").ValueGeneratedOnAdd().HasColumnType("bigint");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<string>("Address").IsRequired().HasMaxLength(500).HasColumnType("character varying(500)");
+                    b.Property<DateTime>("CreatedAt").HasColumnType("timestamp with time zone");
+                    b.Property<string>("CreatedBy").HasColumnType("text");
+                    b.Property<DateTime?>("DeletedAt").HasColumnType("timestamp with time zone");
+                    b.Property<string>("Email").HasMaxLength(254).HasColumnType("character varying(254)");
+                    b.Property<string>("Name").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+                    b.Property<string>("OpeningHours").HasMaxLength(1000).HasColumnType("character varying(1000)");
+                    b.Property<string>("Phone").HasMaxLength(50).HasColumnType("character varying(50)");
+                    b.Property<int>("ProvinceId").HasColumnType("integer");
+                    b.Property<int>("WardId").HasColumnType("integer");
+                    b.Property<double>("Latitude").HasColumnType("double precision");
+                    b.Property<double>("Longitude").HasColumnType("double precision");
+                    b.Property<bool>("IsActive").ValueGeneratedOnAdd().HasColumnType("boolean").HasDefaultValue(true);
+                    b.Property<bool>("IsDeleted").ValueGeneratedOnAdd().HasColumnType("boolean").HasDefaultValue(false);
+                    b.Property<DateTime?>("LastModifiedAt").HasColumnType("timestamp with time zone");
+                    b.Property<string>("LastModifiedBy").HasColumnType("text");
+                    b.Property<int>("SortOrder").ValueGeneratedOnAdd().HasColumnType("integer").HasDefaultValue(0);
+                    b.HasKey("Id");
+                    b.HasIndex("IsActive", "SortOrder");
+                    b.HasIndex("ProvinceId");
+                    b.HasIndex("WardId");
+                    b.ToTable("Stores", (string)null);
+                });
+
             modelBuilder.Entity("Contents.Domain.Entities.Ward", b =>
                 {
                     b.Property<int>("Id")

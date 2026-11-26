@@ -68,6 +68,10 @@ public class UpdateBasketCommandHandler(
         }
 
         var req = command.Request;
+        if (req.StoreId is <= 0)
+        {
+            return Result.Failure<BasketDto>(BasketErrors.StoreIdRequired);
+        }
 
         // 1. Gom nhóm các item trùng lặp và loại bỏ item có quantity <= 0 (tương đương xóa item)
         var validItems = (req.Items ?? [])
@@ -141,6 +145,11 @@ public class UpdateBasketCommandHandler(
 
         basket.UpdateItems(newItems);
         basket.UpdateFulfillment(fulfillmentType, customerInfo, shippingInfo, req.PaymentMethod, req.ShippingMethod, req.Note);
+
+        if (req.StoreId is long storeId)
+        {
+            basket.SelectStore(storeId);
+        }
 
         basketRepository.Update(basket);
         await unitOfWork.SaveChangesAsync(ct);

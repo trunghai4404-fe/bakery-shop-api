@@ -61,7 +61,8 @@ public static class BasketMappingExtensions
             basket.Subtotal,
             basket.Note,
             basket.ExpiresAt,
-            hasWarnings
+            hasWarnings,
+            basket.StoreId
         );
     }
 }

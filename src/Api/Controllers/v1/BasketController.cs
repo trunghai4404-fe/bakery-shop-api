@@ -67,7 +67,9 @@ public class BasketController(ISender sender) : ApiControllerBase
     /// Chốt đơn hàng từ giỏ hàng (Tạo Order và Clear giỏ hàng) - Không cần gửi body, lấy toàn bộ thông tin từ Basket
     /// </summary>
     [HttpPost("{basketId:guid}/checkout")]
-    public async Task<IActionResult> Checkout([FromRoute] Guid basketId, CancellationToken ct)
+    public async Task<IActionResult> Checkout(
+        [FromRoute] Guid basketId,
+        CancellationToken ct)
     {
         var command = new CheckoutBasketCommand(basketId);
         var result = await sender.Send(command, ct);

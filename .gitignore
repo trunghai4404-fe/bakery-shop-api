@@ -488,3 +488,4 @@ docs/*
 !docs/README.md
 !docs/architecture.md
 !docs/implementation-rules.md
+!docs/store-api.md

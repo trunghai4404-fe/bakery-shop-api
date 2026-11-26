@@ -11,19 +11,19 @@ public class ErrorMessage
     public const string NotFound = "Resource not found";
     public const string Conflict = "A conflict occurred or the resource already exists.";
     public const string Failure = "The requested operation failed.";
-    
+
     // Identity
     public const string UserNotFound = "User not found";
     public const string InvalidCredentials = "Invalid email or password";
     public const string EmailAlreadyExists = "Email already exists";
     public const string InvalidRefreshToken = "Invalid refresh token";
     public const string AccountInactive = "Account is inactive";
-    
+
     // Role
     public const string RoleAlreadyExists = "Role already exists";
     public const string RoleNotFound = "Role is not found";
-    public const string InvalidIdentifier ="Id or Code is required.";
-    
+    public const string InvalidIdentifier = "Id or Code is required.";
+
     // Catalog
     public const string CategoryNotFound = "Category not found.";
     public const string CategorySlugAlreadyExists = "Category slug already exists.";
@@ -38,4 +38,7 @@ public class ErrorMessage
 
     // Contents / Banner
     public const string BannerNotFound = "Banner not found.";
+    public const string StoreNotFound = "Store was not found.";
+    public const string SelectedStoreNotFoundOrInactive = "Cửa hàng được chọn không tồn tại hoặc đã ngừng hoạt động.";
+    public const string StoreIdRequired = "Vui lòng chọn cửa hàng trước khi tạo đơn hàng.";
 }

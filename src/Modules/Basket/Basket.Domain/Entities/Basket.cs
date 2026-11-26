@@ -13,6 +13,7 @@ public class Basket : AuditableEntity<Guid>
     public ShippingInfo? ShippingInfo { get; private set; }
     public string PaymentMethod { get; private set; } = "COD";
     public string? ShippingMethod { get; private set; }
+    public long? StoreId { get; private set; }
     public List<BasketItem> Items { get; private set; } = [];
     public string? Note { get; private set; }
     public DateTimeOffset ExpiresAt { get; private set; }
@@ -65,6 +66,12 @@ public class Basket : AuditableEntity<Guid>
             ? (string.IsNullOrWhiteSpace(shippingMethod) ? "INTERNAL" : shippingMethod)
             : null;
         Note = note;
+        LastModifiedAt = DateTime.UtcNow;
+    }
+
+    public void SelectStore(long storeId)
+    {
+        StoreId = storeId;
         LastModifiedAt = DateTime.UtcNow;
     }
 

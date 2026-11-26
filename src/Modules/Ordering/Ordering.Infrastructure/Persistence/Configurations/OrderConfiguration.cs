@@ -89,6 +89,12 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 v => v == null ? null : JsonSerializer.Serialize(v, JsonOptions),
                 v => string.IsNullOrEmpty(v) ? null : JsonSerializer.Deserialize<OrderShippingAddress>(v, JsonOptions));
 
+        builder.Property(o => o.StoreInfo)
+            .HasColumnType("jsonb")
+            .HasConversion(
+                v => v == null ? null : JsonSerializer.Serialize(v, JsonOptions),
+                v => string.IsNullOrEmpty(v) ? null : JsonSerializer.Deserialize<OrderStoreInfo>(v, JsonOptions));
+
         builder.HasMany(o => o.Items)
             .WithOne()
             .HasForeignKey(i => i.OrderId)

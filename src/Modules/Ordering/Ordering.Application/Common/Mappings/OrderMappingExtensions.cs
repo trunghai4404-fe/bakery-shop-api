@@ -53,7 +53,19 @@ public static class OrderMappingExtensions
                 i.DiscountPercent,
                 i.FinalPrice,
                 i.TotalItemPrice
-            )).ToList()
+            )).ToList(),
+            order.StoreInfo == null ? null : new OrderStoreDto(
+                order.StoreInfo.Id,
+                order.StoreInfo.Name,
+                order.StoreInfo.Address,
+                order.StoreInfo.ProvinceId,
+                order.StoreInfo.WardId,
+                order.StoreInfo.Latitude,
+                order.StoreInfo.Longitude,
+                order.StoreInfo.Phone,
+                order.StoreInfo.Email,
+                order.StoreInfo.OpeningHours
+            )
         );
     }
 
@@ -80,7 +92,19 @@ public static class OrderMappingExtensions
                 i.Quantity,
                 i.FinalPrice,
                 i.TotalItemPrice
-            )).ToList()
+            )).ToList(),
+            order.StoreInfo == null ? null : new OrderStoreDto(
+                order.StoreInfo.Id,
+                order.StoreInfo.Name,
+                order.StoreInfo.Address,
+                order.StoreInfo.ProvinceId,
+                order.StoreInfo.WardId,
+                order.StoreInfo.Latitude,
+                order.StoreInfo.Longitude,
+                order.StoreInfo.Phone,
+                order.StoreInfo.Email,
+                order.StoreInfo.OpeningHours
+            )
         );
     }
 
@@ -117,7 +141,19 @@ public static class OrderMappingExtensions
                 i.DiscountPercent,
                 i.FinalPrice,
                 i.TotalItemPrice
-            )).ToList()
+            )).ToList(),
+            order.StoreInfo == null ? null : new OrderStoreDto(
+                order.StoreInfo.Id,
+                order.StoreInfo.Name,
+                order.StoreInfo.Address,
+                order.StoreInfo.ProvinceId,
+                order.StoreInfo.WardId,
+                order.StoreInfo.Latitude,
+                order.StoreInfo.Longitude,
+                order.StoreInfo.Phone,
+                order.StoreInfo.Email,
+                order.StoreInfo.OpeningHours
+            )
         );
     }
 

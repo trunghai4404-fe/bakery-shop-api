@@ -5,16 +5,22 @@ namespace Basket.Domain.Errors;
 
 public static class BasketErrors
 {
-    public static readonly Error NotFound = 
+    public static readonly Error NotFound =
         Error.NotFound(ErrorCode.BasketNotFound, "Giỏ hàng không tồn tại hoặc đã hết hạn.");
 
-    public static readonly Error Empty = 
+    public static readonly Error Empty =
         Error.Validation(ErrorCode.BasketEmpty, "Giỏ hàng hiện đang rỗng.");
 
-    public static readonly Error ShippingInfoRequired = 
+    public static readonly Error ShippingInfoRequired =
         Error.Validation(ErrorCode.ShippingInfoRequired, "Hình thức giao hàng tận nơi bắt buộc phải có thông tin địa chỉ giao.");
 
-    public static readonly Error InvalidQuantity = 
+    public static readonly Error StoreIdRequired =
+        Error.Validation(ErrorCode.StoreIdRequired, ErrorMessage.StoreIdRequired);
+
+    public static readonly Error StoreNotFound =
+        Error.NotFound(ErrorCode.StoreNotFound, ErrorMessage.SelectedStoreNotFoundOrInactive);
+
+    public static readonly Error InvalidQuantity =
         Error.Validation(ErrorCode.InvalidQuantity, "Số lượng sản phẩm không hợp lệ.");
 
     public static Error OutOfStock(string productName, int availableStock) =>

@@ -1,4 +1,5 @@
 namespace SharedKernel.Commons;
+
 public static class ErrorCode
 {
     // Common / System Errors
@@ -8,7 +9,7 @@ public static class ErrorCode
     public const string Unauthorized = "UNAUTHORIZED";
     public const string Forbidden = "FORBIDDEN";
     public const string NotHavePermission = "NOT_HAVE_PERMISSION";
-    
+
     // Data & Validation Errors
     public const string InvalidValue = "INVALID_VALUE";
     public const string ValidationError = "VALIDATION_ERROR";
@@ -16,23 +17,23 @@ public static class ErrorCode
     public const string NullValue = "NULL_VALUE";
     public const string Conflict = "CONFLICT";
     public const string OperationFailed = "OPERATION_FAILED";
-    
+
     // Auth Errors
     public const string ExpiredToken = "EXPIRED_TOKEN";
     public const string InvalidToken = "INVALID_TOKEN";
     public const string InvalidCredentials = "INVALID_CREDENTIALS";
-    
+
     //Identity
     public const string UserNotFound = "USER_NOT_FOUND";
     public const string EmailAlreadyExists = "EMAIL_ALREADY_EXISTS";
     public const string InvalidRefreshToken = "INVALID_REFRESH_TOKEN";
     public const string AccountInactive = "ACCOUNT_INACTIVE";
-    
+
     //Role
     public const string RoleAlreadyExists = "ROLE_ALREADY_EXISTS";
     public const string RoleNotFound = "ROLE_NOT_FOUND";
-    public const string InvalidIdentifier ="Id or Code is required.";
-    
+    public const string InvalidIdentifier = "Id or Code is required.";
+
     //Catalog
     public const string VariantNotFound = "VARIANT_NOT_FOUND";
     public const string ProductNotFound = "PRODUCT_NOT_FOUND";
@@ -48,17 +49,19 @@ public static class ErrorCode
 
     // Contents / Banner
     public const string BannerNotFound = "BANNER_NOT_FOUND";
-    
+    public const string StoreNotFound = "STORE_NOT_FOUND";
+
     //Basket
     public const string BasketNotFound = "BASKET_NOT_FOUND";
     public const string BasketEmpty = "BASKET_EMPTY";
-    public const string ShippingInfoRequired  = "SHIPPING_INFO_REQUIRED";
+    public const string ShippingInfoRequired = "SHIPPING_INFO_REQUIRED";
     public const string InvalidQuantity = "INVALID_QUANTITY";
     public const string OutOfStock = "OUTOFSTOCK";
     public const string ProductNotFoundOrInactive = "PRODUCT_NOT_FOUND";
 
     // Ordering
     public const string OrderNotFound = "ORDER_NOT_FOUND";
+    public const string StoreIdRequired = "STORE_ID_REQUIRED";
     public const string InvalidPaymentMethod = "INVALID_PAYMENT_METHOD";
     public const string InvalidShippingMethod = "INVALID_SHIPPING_METHOD";
     public const string EmptyOrder = "EMPTY_ORDER";

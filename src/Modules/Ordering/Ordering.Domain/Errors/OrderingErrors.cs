@@ -37,6 +37,10 @@ public static class OrderingErrors
         ErrorCode.EmptyOrder,
         "Đơn hàng phải có ít nhất 1 sản phẩm.");
 
+    public static readonly Error StoreIdRequired = Error.Validation(
+        ErrorCode.StoreIdRequired,
+        ErrorMessage.StoreIdRequired);
+
     public static readonly Error CannotCancelNonPendingOrder = Error.Validation(
         ErrorCode.ValidationError,
         "Chỉ có thể hủy đơn hàng khi đơn đang ở trạng thái Chờ xác nhận (Pending).");

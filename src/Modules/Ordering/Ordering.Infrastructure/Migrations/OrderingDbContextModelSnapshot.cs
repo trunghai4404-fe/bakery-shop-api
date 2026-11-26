@@ -93,6 +93,9 @@ namespace Ordering.Infrastructure.Migrations
                     b.Property<string>("ShippingAddress")
                         .HasColumnType("jsonb");
 
+                    b.Property<string>("StoreInfo")
+                        .HasColumnType("jsonb");
+
                     b.Property<decimal>("ShippingFee")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");

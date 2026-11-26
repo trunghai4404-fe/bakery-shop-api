@@ -48,7 +48,8 @@ public record BasketDto(
     decimal Subtotal,
     string? Note,
     DateTimeOffset ExpiresAt,
-    bool HasWarnings = false
+    bool HasWarnings = false,
+    long? StoreId = null
 );
 
 public record BasketItemRequest(
@@ -62,7 +63,8 @@ public record CreateBasketRequest(
     string? PaymentMethod = null,
     string? ShippingMethod = null,
     List<BasketItemRequest>? Items = null,
-    string? Note = null
+    string? Note = null,
+    long? StoreId = null
 );
 
 public record UpdateBasketRequest(
@@ -72,7 +74,8 @@ public record UpdateBasketRequest(
     string? PaymentMethod,
     string? ShippingMethod,
     List<BasketItemRequest> Items,
-    string? Note
+    string? Note,
+    long? StoreId = null
 );
 
 public record CheckoutResultDto(

@@ -3,6 +3,7 @@ using Basket.Domain.Enums;
 using Basket.Domain.Errors;
 using Basket.Domain.Repositories;
 using Catalog.Contracts.Interfaces;
+using Contents.Contracts.Interfaces;
 using MediatR;
 using Ordering.Contracts.DTOs;
 using Ordering.Contracts.Interfaces;
@@ -16,6 +17,7 @@ public class CheckoutBasketCommandHandler(
     IBasketRepository basketRepository,
     IBasketUnitOfWork unitOfWork,
     ICatalogContract catalogContract,
+    IStoreContract storeContract,
     IOrderingContract orderingContract
 ) : IRequestHandler<CheckoutBasketCommand, Result<CheckoutResultDto>>
 {
@@ -25,6 +27,12 @@ public class CheckoutBasketCommandHandler(
         if (basket == null)
         {
             return Result.Failure<CheckoutResultDto>(BasketErrors.NotFound);
+        }
+
+        var storeId = basket.StoreId.GetValueOrDefault();
+        if (storeId <= 0)
+        {
+            return Result.Failure<CheckoutResultDto>(BasketErrors.StoreIdRequired);
         }
 
         if (basket.Items.Count == 0)
@@ -75,6 +83,25 @@ public class CheckoutBasketCommandHandler(
             basket.CustomerInfo.Email
         );
 
+        var selectedStore = await storeContract.GetActiveStoreAsync(storeId, ct);
+        if (selectedStore == null)
+        {
+            return Result.Failure<CheckoutResultDto>(BasketErrors.StoreNotFound);
+        }
+
+        var orderStore = new OrderStoreDto(
+            selectedStore.Id,
+            selectedStore.Name,
+            selectedStore.Address,
+            selectedStore.ProvinceId,
+            selectedStore.WardId,
+            selectedStore.Latitude,
+            selectedStore.Longitude,
+            selectedStore.Phone,
+            selectedStore.Email,
+            selectedStore.OpeningHours
+        );
+
         OrderShippingAddressDto? shippingAddress = null;
         if (basket.FulfillmentType == FulfillmentType.Delivery && basket.ShippingInfo != null)
         {
@@ -96,7 +123,8 @@ public class CheckoutBasketCommandHandler(
             basket.PaymentMethod,
             basket.ShippingMethod,
             orderItems,
-            basket.Note
+            basket.Note,
+            orderStore
         );
 
         var orderResult = await orderingContract.CreateOrderFromBasketAsync(createOrderRequest, ct);
