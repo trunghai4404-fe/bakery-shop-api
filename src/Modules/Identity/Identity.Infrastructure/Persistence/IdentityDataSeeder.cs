@@ -57,6 +57,11 @@ public static class IdentityDataSeeder
                 new(PermissionEnum.Store.StoreUpdate, "Chỉnh sửa cửa hàng", null),
                 new(PermissionEnum.Store.StoreDelete, "Xóa cửa hàng", null),
 
+                new(PermissionEnum.Contact.ContactView, "Xem thông tin liên hệ", null),
+                new(PermissionEnum.Contact.ContactCreate, "Thêm thông tin liên hệ", null),
+                new(PermissionEnum.Contact.ContactUpdate, "Chỉnh sửa thông tin liên hệ", null),
+                new(PermissionEnum.Contact.ContactDelete, "Xóa thông tin liên hệ", null),
+
                 new(PermissionEnum.Order.OrderView, "Xem đơn hàng", null),
                 new(PermissionEnum.Order.OrderUpdate, "Cập nhật đơn hàng", null),
                 new(PermissionEnum.Order.OrderCancel, "Hủy đơn hàng", null),

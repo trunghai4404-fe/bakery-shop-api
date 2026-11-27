@@ -489,3 +489,4 @@ docs/*
 !docs/architecture.md
 !docs/implementation-rules.md
 !docs/store-api.md
+!docs/contents-api.md

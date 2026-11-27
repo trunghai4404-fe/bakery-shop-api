@@ -15,6 +15,7 @@ public class ContentsDbContext(
     public DbSet<District> Districts => Set<District>();
     public DbSet<Ward> Wards => Set<Ward>();
     public DbSet<Store> Stores => Set<Store>();
+    public DbSet<Contact> Contacts => Set<Contact>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

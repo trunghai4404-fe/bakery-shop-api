@@ -53,6 +53,14 @@ public static class PermissionEnum
         public const string StoreDelete = "Store.Delete";
     }
 
+    public static class Contact
+    {
+        public const string ContactView = "Contact.View";
+        public const string ContactCreate = "Contact.Create";
+        public const string ContactUpdate = "Contact.Update";
+        public const string ContactDelete = "Contact.Delete";
+    }
+
     public static class Order
     {
         public const string OrderView = "Order.View";

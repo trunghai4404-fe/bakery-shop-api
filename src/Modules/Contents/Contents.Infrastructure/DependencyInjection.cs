@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IStoreRepository, StoreRepository>();
         services.AddScoped<IStoreContract, StoreContract>();
+        services.AddScoped<IContactRepository, ContactRepository>();
 
         // Cấu hình Redis Cache (Distributed Cache)
         var redisConn = configuration.GetConnectionString("Redis");
