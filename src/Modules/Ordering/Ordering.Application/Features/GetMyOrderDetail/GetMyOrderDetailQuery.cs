@@ -13,14 +13,14 @@ namespace Ordering.Application.Features.GetMyOrderDetail;
 public record GetMyOrderDetailQuery(
     string OrderCode,
     Guid? UserId = null
-) : IRequest<Result<OrderDto>>;
+) : IRequest<Result<OrderDetailDto>>;
 
 public class GetMyOrderDetailQueryHandler(
     IOrderRepository orderRepository,
     ICurrentUserService currentUserService
-) : IRequestHandler<GetMyOrderDetailQuery, Result<OrderDto>>
+) : IRequestHandler<GetMyOrderDetailQuery, Result<OrderDetailDto>>
 {
-    public async Task<Result<OrderDto>> Handle(GetMyOrderDetailQuery request, CancellationToken ct)
+    public async Task<Result<OrderDetailDto>> Handle(GetMyOrderDetailQuery request, CancellationToken ct)
     {
         Order? order;
 
@@ -36,17 +36,17 @@ public class GetMyOrderDetailQueryHandler(
             var userId = request.UserId ?? currentUserService.UserId;
             if (!userId.HasValue)
             {
-                return Result.Failure<OrderDto>(Error.Unauthorized);
+                return Result.Failure<OrderDetailDto>(Error.Unauthorized);
             }
 
-            order = await orderRepository.GetByCodeAndUserIdAsync(request.OrderCode, userId.Value, ct);
+            order = await orderRepository.GetDetailByCodeAndUserIdAsync(request.OrderCode, userId.Value, ct);
         }
 
         if (order == null)
         {
-            return Result.Failure<OrderDto>(OrderingErrors.NotFoundByCode(request.OrderCode));
+            return Result.Failure<OrderDetailDto>(OrderingErrors.NotFoundByCode(request.OrderCode));
         }
 
-        return Result.Success(order.ToOrderDto());
+        return Result.Success(order.ToOrderDetailDto());
     }
 }

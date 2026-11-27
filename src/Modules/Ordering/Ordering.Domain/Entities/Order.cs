@@ -10,6 +10,7 @@ namespace Ordering.Domain.Entities;
 public class Order : AuditableEntity<long>
 {
     private const string OrderCodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private readonly List<OrderStatusHistory> _statusHistories = [];
 
     public string OrderCode { get; private set; } = string.Empty;
     public Guid? UserId { get; private set; }
@@ -39,6 +40,7 @@ public class Order : AuditableEntity<long>
     public DateTime? CancelledAt { get; private set; }
 
     public List<OrderItem> Items { get; private set; } = [];
+    public IReadOnlyCollection<OrderStatusHistory> StatusHistories => _statusHistories.AsReadOnly();
 
     private Order() { }
 

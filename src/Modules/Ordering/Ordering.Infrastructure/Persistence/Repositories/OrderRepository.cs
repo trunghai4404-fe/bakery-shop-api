@@ -14,11 +14,14 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
             .FirstOrDefaultAsync(o => o.Id == id, ct);
     }
 
-    public async Task<Order?> GetByCodeAsync(string orderCode, CancellationToken ct = default)
+    public Task<Order?> GetDetailByIdAsync(long id, CancellationToken ct = default)
     {
-        return await dbContext.Orders
-            .Include(o => o.Items)
-            .FirstOrDefaultAsync(o => o.OrderCode == orderCode, ct);
+        return QueryDetails().FirstOrDefaultAsync(o => o.Id == id, ct);
+    }
+
+    public Task<Order?> GetByCodeAsync(string orderCode, CancellationToken ct = default)
+    {
+        return QueryDetails().FirstOrDefaultAsync(o => o.OrderCode == orderCode, ct);
     }
 
     public async Task<Order?> GetByCodeAndUserIdAsync(string orderCode, Guid userId, CancellationToken ct = default)
@@ -28,10 +31,14 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
             .FirstOrDefaultAsync(o => o.OrderCode == orderCode && o.UserId == userId, ct);
     }
 
+    public Task<Order?> GetDetailByCodeAndUserIdAsync(string orderCode, Guid userId, CancellationToken ct = default)
+    {
+        return QueryDetails().FirstOrDefaultAsync(o => o.OrderCode == orderCode && o.UserId == userId, ct);
+    }
+
     public async Task<Order?> GetByCodeAndPhoneAsync(string orderCode, string phoneNumber, CancellationToken ct = default)
     {
-        var order = await dbContext.Orders
-            .Include(o => o.Items)
+        var order = await QueryDetails()
             .FirstOrDefaultAsync(o => o.OrderCode == orderCode, ct);
 
         if (order != null && string.Equals(order.CustomerInfo.Phone, phoneNumber.Trim(), StringComparison.OrdinalIgnoreCase))
@@ -212,6 +219,16 @@ public class OrderRepository(OrderingDbContext dbContext) : IOrderRepository
 
     public void Update(Order order)
     {
-        dbContext.Orders.Update(order);
+        // The write queries track the order. Let EF persist the changed fields and refresh its audit timestamp.
+        dbContext.Entry(order).Property(o => o.LastModifiedAt).IsModified = true;
+    }
+
+    private IQueryable<Order> QueryDetails()
+    {
+        return dbContext.Orders
+            .AsNoTracking()
+            .AsSingleQuery()
+            .Include(o => o.Items)
+            .Include(o => o.StatusHistories);
     }
 }

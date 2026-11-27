@@ -1,4 +1,6 @@
-﻿namespace Ordering.Contracts.DTOs;
+﻿using System.Text.Json.Serialization;
+
+namespace Ordering.Contracts.DTOs;
 
 public record PaymentMethodDto(
     string Code,
@@ -99,6 +101,8 @@ public record OrderItemDto(
     decimal TotalItemPrice
 );
 
+public record OrderStatusHistoryDto(string Status, DateTime CreatedTime);
+
 public record OrderDto(
     long Id,
     string OrderCode,
@@ -125,6 +129,17 @@ public record OrderDto(
     List<OrderItemDto> Items,
     OrderStoreDto? Store = null
 );
+
+public sealed record OrderDetailDto : OrderDto
+{
+    public OrderDetailDto(OrderDto order, IReadOnlyList<OrderStatusHistoryDto>? histories) : base(order)
+    {
+        Histories = histories;
+    }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public IReadOnlyList<OrderStatusHistoryDto>? Histories { get; }
+}
 
 // DTOs dành cho User
 public record UserOrderItemSummaryDto(
@@ -206,7 +221,11 @@ public record PublicOrderLookupDto(
     DateTime CreatedAt,
     List<OrderItemDto> Items,
     OrderStoreDto? Store = null
-);
+)
+{
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public IReadOnlyList<OrderStatusHistoryDto>? Histories { get; init; }
+}
 
 // DTOs dành cho Admin (CMS)
 public record AdminUpdateOrderStatusRequest(

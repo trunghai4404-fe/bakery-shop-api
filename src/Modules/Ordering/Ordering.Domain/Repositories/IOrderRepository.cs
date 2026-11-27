@@ -6,8 +6,10 @@ namespace Ordering.Domain.Repositories;
 public interface IOrderRepository
 {
     Task<Order?> GetByIdAsync(long id, CancellationToken ct = default);
+    Task<Order?> GetDetailByIdAsync(long id, CancellationToken ct = default);
     Task<Order?> GetByCodeAsync(string orderCode, CancellationToken ct = default);
     Task<Order?> GetByCodeAndUserIdAsync(string orderCode, Guid userId, CancellationToken ct = default);
+    Task<Order?> GetDetailByCodeAndUserIdAsync(string orderCode, Guid userId, CancellationToken ct = default);
     Task<Order?> GetByCodeAndPhoneAsync(string orderCode, string phoneNumber, CancellationToken ct = default);
     Task<(List<Order> Items, int TotalCount)> GetByUserIdPagedAsync(Guid userId, string? keyword, OrderStatus? status, int page, int pageSize, CancellationToken ct = default);
     Task<Dictionary<OrderStatus, int>> GetStatusCountsAsync(Guid? userId, string? keyword, CancellationToken ct = default);

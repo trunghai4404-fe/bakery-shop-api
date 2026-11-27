@@ -93,9 +93,6 @@ namespace Ordering.Infrastructure.Migrations
                     b.Property<string>("ShippingAddress")
                         .HasColumnType("jsonb");
 
-                    b.Property<string>("StoreInfo")
-                        .HasColumnType("jsonb");
-
                     b.Property<decimal>("ShippingFee")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
@@ -114,6 +111,9 @@ namespace Ordering.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<string>("StoreInfo")
+                        .HasColumnType("jsonb");
 
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(18, 2)
@@ -135,7 +135,10 @@ namespace Ordering.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders", null, t =>
+                        {
+                            t.HasTrigger("TR_Orders_RecordStatusHistory");
+                        });
                 });
 
             modelBuilder.Entity("Ordering.Domain.Entities.OrderItem", b =>
@@ -205,6 +208,35 @@ namespace Ordering.Infrastructure.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems", (string)null);
+                });
+
+            modelBuilder.Entity("Ordering.Domain.Entities.OrderStatusHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsOrderCreation")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderStatusHistories", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Domain.Entities.PaymentMethod", b =>
@@ -318,9 +350,20 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Ordering.Domain.Entities.OrderStatusHistory", b =>
+                {
+                    b.HasOne("Ordering.Domain.Entities.Order", null)
+                        .WithMany("StatusHistories")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Ordering.Domain.Entities.Order", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("StatusHistories");
                 });
 #pragma warning restore 612, 618
         }

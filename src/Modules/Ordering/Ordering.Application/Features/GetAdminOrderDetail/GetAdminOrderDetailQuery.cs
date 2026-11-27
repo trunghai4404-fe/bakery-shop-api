@@ -7,20 +7,20 @@ using SharedKernel.Domain;
 
 namespace Ordering.Application.Features.GetAdminOrderDetail;
 
-public record GetAdminOrderDetailQuery(long Id) : IRequest<Result<OrderDto>>;
+public record GetAdminOrderDetailQuery(long Id) : IRequest<Result<OrderDetailDto>>;
 
 public class GetAdminOrderDetailQueryHandler(
     IOrderRepository orderRepository
-) : IRequestHandler<GetAdminOrderDetailQuery, Result<OrderDto>>
+) : IRequestHandler<GetAdminOrderDetailQuery, Result<OrderDetailDto>>
 {
-    public async Task<Result<OrderDto>> Handle(GetAdminOrderDetailQuery request, CancellationToken ct)
+    public async Task<Result<OrderDetailDto>> Handle(GetAdminOrderDetailQuery request, CancellationToken ct)
     {
-        var order = await orderRepository.GetByIdAsync(request.Id, ct);
+        var order = await orderRepository.GetDetailByIdAsync(request.Id, ct);
         if (order == null)
         {
-            return Result.Failure<OrderDto>(OrderingErrors.NotFound(request.Id));
+            return Result.Failure<OrderDetailDto>(OrderingErrors.NotFound(request.Id));
         }
 
-        return Result.Success(order.ToOrderDto());
+        return Result.Success(order.ToOrderDetailDto());
     }
 }

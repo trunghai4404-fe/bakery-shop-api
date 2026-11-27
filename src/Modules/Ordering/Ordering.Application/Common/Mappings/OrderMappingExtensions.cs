@@ -1,5 +1,6 @@
 ﻿using Ordering.Contracts.DTOs;
 using Ordering.Domain.Entities;
+using Ordering.Domain.Enums;
 
 namespace Ordering.Application.Common.Mappings;
 
@@ -67,6 +68,11 @@ public static class OrderMappingExtensions
                 order.StoreInfo.OpeningHours
             )
         );
+    }
+
+    public static OrderDetailDto ToOrderDetailDto(this Order order)
+    {
+        return new OrderDetailDto(order.ToOrderDto(), MapStatusHistories(order));
     }
 
     public static UserOrderSummaryDto ToUserSummaryDto(this Order order)
@@ -154,7 +160,27 @@ public static class OrderMappingExtensions
                 order.StoreInfo.Email,
                 order.StoreInfo.OpeningHours
             )
-        );
+        )
+        {
+            Histories = MapStatusHistories(order)
+        };
+    }
+
+    private static List<OrderStatusHistoryDto>? MapStatusHistories(Order order)
+    {
+        var histories = order.StatusHistories.OrderBy(history => history.Id).ToList();
+        if (histories.Count == 0 ||
+            !histories[0].IsOrderCreation ||
+            histories[0].Status != OrderStatus.Pending ||
+            histories[0].CreatedTime != order.CreatedAt ||
+            histories[^1].Status != order.Status)
+        {
+            return null;
+        }
+
+        return histories
+            .Select(history => new OrderStatusHistoryDto(history.Status.ToString(), history.CreatedTime))
+            .ToList();
     }
 
     private static string MaskPhone(string phone)
